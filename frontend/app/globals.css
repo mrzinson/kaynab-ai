@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Gentle Float & Animations ── */
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0px); }
+  50%      { transform: translateY(-6px); }
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.dp-float   { animation: float-gentle 4s ease-in-out infinite; }
+.dp-fade-up { animation: fade-in-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+/* ── Custom scrollbar ── */
+::-webkit-scrollbar        { width: 4px; height: 4px; }
+::-webkit-scrollbar-track  { background: transparent; }
+::-webkit-scrollbar-thumb  { background: rgba(255,255,255,0.08); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.16); }
+
+/* ── Focus outlines ── */
+:focus-visible { outline: 2px solid rgba(0,132,255,0.6); outline-offset: 2px; }
+
+/* ── Glitch/Overlapping Prevention ── */
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
