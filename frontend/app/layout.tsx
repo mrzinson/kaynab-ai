@@ -17,17 +17,17 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Fire AI — Global AI Search & Document Grounding Workspace",
-  description: "Fire AI combines real-time web search citations (Perplexity style) with interactive concept map generation and document grounding (NotebookLM style).",
-  keywords: ["Fire AI", "AI search", "Perplexity style", "NotebookLM style", "concept maps", "document chat"],
+  title: "Kaynab AI — Global AI Search & Document Grounding Workspace",
+  description: "Kaynab AI combines real-time web search citations with interactive concept map generation and document grounding.",
+  keywords: ["Kaynab AI", "AI search", "concept maps", "document chat", "research AI"],
   appleWebApp: {
     capable: true,
-    title: "Fire AI",
+    title: "Kaynab AI",
     statusBarStyle: "black-translucent",
   },
   icons: {
-    icon: "/fire-logo.png",
-    apple: "/fire-logo.png",
+    icon: "/kaynab-logo.png",
+    apple: "/kaynab-logo.png",
   },
 };
 

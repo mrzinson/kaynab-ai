@@ -123,9 +123,9 @@ export default function AppWorkspace() {
       <div className="flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: DP_ACCENT }}>
-            <span className="text-white font-black text-[10px]">FA</span>
+            <span className="text-white font-black text-[10px]">KB</span>
           </div>
-          <span className="text-white font-black text-sm tracking-widest">FIRE AI</span>
+          <span className="text-white font-black text-sm tracking-widest">KAYNAB AI</span>
         </div>
         <button onClick={() => setLeftOpen(false)} className="lg:hidden text-white/30 hover:text-white/80 p-1">
           <Ico d={PATHS.close} cls="w-4 h-4" />
@@ -135,10 +135,10 @@ export default function AppWorkspace() {
       {/* User card */}
       <div className="shrink-0 rounded-2xl p-4 flex flex-col items-center text-center gap-3" style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${DP_BORD}` }}>
         <div className="w-14 h-14 rounded-full flex items-center justify-center text-white text-xl font-black" style={{ background: DP_ACCENT }}>
-          {userData?.name ? userData.name.substring(0, 2).toUpperCase() : 'FA'}
+          {userData?.name ? userData.name.substring(0, 2).toUpperCase() : 'KB'}
         </div>
         <div>
-          <p className="text-white text-sm font-bold">@{userData?.username || 'Fire AI User'}</p>
+          <p className="text-white text-sm font-bold">@{userData?.username || 'Kaynab AI User'}</p>
           <p className="text-white/40 text-[10px] mt-0.5">{userData?.whatsapp_number || ''}</p>
         </div>
         <button onClick={() => nav('billing')} className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-white text-[10px] font-black hover:opacity-90 transition-all animate-pulse"

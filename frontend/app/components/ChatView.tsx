@@ -416,7 +416,7 @@ export default function ChatView({ onOpenLeftSidebar, onOpenNavPanel }: ChatView
               <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center select-none overflow-y-auto pointer-events-none">
                 <div className="max-w-xl w-full flex flex-col items-center gap-6">
                   <div className="w-14 h-14 rounded-3xl flex items-center justify-center bg-blue-500/10 border border-blue-500/20 shadow-2xl animate-pulse">
-                    <span className="text-blue-400 font-black text-lg">FA</span>
+                    <span className="text-blue-400 font-black text-lg">KB</span>
                   </div>
                   <h1 className="text-white text-3xl font-black tracking-tight leading-none">Where knowledge begins.</h1>
                   <p className="text-white/40 text-sm max-w-sm">Ask anything, upload research files, or search the live web with citation mapping.</p>
