@@ -220,7 +220,7 @@ exports.askGemini = async (prompt, modelName = "gemini-3.1-flash-lite", attachme
     }
 
     console.error("Gemini Error after all fallback models and retries:", lastError);
-    throw new Error("Waan ka xunnahay, darkpen cilad ayaa ku timid.");
+    throw new Error("Waan ka xunnahay, Kaynab AI cilad ayaa ku timid.");
 };
 
 /**
@@ -305,7 +305,7 @@ exports.askGeminiStream = async (prompt, modelName = "gemini-3.1-flash-lite", at
     }
 
     console.error("Gemini Stream Error after all fallback models and retries:", lastError);
-    throw new Error("Waan ka xunnahay, adeegga streaming-ka ee zinsonai ee loogu tala galay darkpen cilad ayaa ku timid.");
+    throw new Error("Waan ka xunnahay, adeegga streaming-ka ee Kaynab AI cilad ayaa ku timid.");
 };
 
 const fs = require('fs');
@@ -570,7 +570,7 @@ exports.generateAIImage = async (prompt) => {
             
             const font = await Jimp.loadFont(Jimp.FONT_SANS_32_WHITE);
             
-            const text = "Darkpen AI";
+            const text = "Kaynab AI";
             const x = image.bitmap.width - 200;
             const y = image.bitmap.height - 60;
             

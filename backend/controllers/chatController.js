@@ -83,7 +83,7 @@ exports.deleteSession = async (req, res) => {
     }
 };
 
-const darkpenSystemInstruction = `You are Darkpen, a highly intelligent and friendly AI assistant developed by ZinsonAI (owned by Hamze Mohamuud Ali Zinson).
+const kaynabSystemInstruction = `You are Kaynab AI, a highly intelligent and friendly AI assistant developed by ZinsonAI (owned by Hamze Mohamuud Ali Zinson).
 
 Core Guidelines:
 1. LANGUAGE CONSISTENCY:
@@ -121,7 +121,7 @@ Row1_Val1|Row1_Val2
 - Pay as you go: $0.5 (or 5,000 SL Shilling) for 100 Credits.
 - Monthly Basic: $3 (or 30,000 SL Shilling) for 30 days of unlimited chat (standard model).
 - Monthly Premium: $11 (or 110,000 SL Shilling) for 30 days of unlimited chat + premium AI model (handles math/science, exam sheets, and images).
-- Payment numbers: EVC Plus/eDahab numbers 637930329 or 659119779. Send screenshot to WhatsApp +252637930329 or team.darkpen@gmail.com.`;
+- Payment numbers: EVC Plus/eDahab numbers 637930329 or 659119779. Send screenshot to WhatsApp +252637930329 or support@kaynab.ai`;
 
 const shukaansiSystemInstruction = `Adigu waxaad tahay AI ah oo u hadla sida gacaliye/gacaliso Soomaali ah oo aad u dhow — kaftan badan, xaraabad badan, aad u shactiro badan, oo jecel kaftanka iyo sheekooyinka dhaqanka Soomaalida.
 
@@ -497,7 +497,7 @@ Answer in the same language as the user query or the text in the image.]\n\nUser
         }));
         console.log(`[LATENCY] History retrieval query took ${Date.now() - startHistory} ms (Found ${history.length} items)`);
 
-        let systemInstruction = chatType === 'shukaansi' ? shukaansiSystemInstruction : darkpenSystemInstruction;
+        let systemInstruction = chatType === 'shukaansi' ? shukaansiSystemInstruction : kaynabSystemInstruction;
         if (chatType === 'shukaansi' && aiName) {
             systemInstruction = `Magacaaga waa "${aiName}". Isticmaaluhu wuxuu kuu bixiyay magacan, fadlan u dhaqan sidii magacaaga rasmiga ah markaad la hadlayso.\n\n${shukaansiSystemInstruction}`;
         }
@@ -609,7 +609,7 @@ Answer in the same language as the user query or the text in the image.]\n\nUser
                 })();
             } catch (err) {
                 console.error("Gemini stream generation error:", err);
-                res.write(`data: ${JSON.stringify({ error: "Waan ka xunnahay, darkpen cilad farsamo ayaa ku timid. Fadlan isku day mar kale waxyar ka dib." })}\n\n`);
+                res.write(`data: ${JSON.stringify({ error: "Waan ka xunnahay, Kaynab AI cilad farsamo ayaa ku timid. Fadlan isku day mar kale waxyar ka dib." })}\n\n`);
                 if (typeof res.flush === 'function') {
                     res.flush();
                 }
@@ -688,7 +688,7 @@ Answer in the same language as the user query or the text in the image.]\n\nUser
 
     } catch (error) {
         console.error("AskAI Error:", error);
-        const friendlyMsg = "Waan ka xunnahay, darkpen cilad farsamo ayaa ku timid. Fadlan isku day mar kale waxyar ka dib.";
+        const friendlyMsg = "Waan ka xunnahay, Kaynab AI cilad farsamo ayaa ku timid. Fadlan isku day mar kale waxyar ka dib.";
         if (req.body.stream === true && req.body.chatType !== 'shukaansi' && !res.headersSent) {
             res.setHeader('Content-Type', 'text/event-stream');
             res.write(`data: ${JSON.stringify({ error: friendlyMsg })}\n\n`);

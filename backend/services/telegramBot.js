@@ -1,4 +1,4 @@
-const fs = require('fs');
+﻿const fs = require('fs');
 const path = require('path');
 const db = require('../config/db');
 const { askGemini, transcribeAudio } = require('./aiService');
@@ -105,7 +105,7 @@ async function checkTelegramRateLimit(userId, chatId) {
             });
             await bot.sendMessage(
                 chatId,
-                `⚠️ Waxaad ka gaadhay xad — Xeerka 1\-Daqiiqo \(10 farriimood\)\!\n\nNidaamku si otomaatig ah ayuu kuu xidhay muddo 10 daqiiqo ah\.\n⏰ Kusoo noqo marka ay tahay: *${unblockTime}*`,
+                `âš ï¸ Waxaad ka gaadhay xad â€” Xeerka 1\-Daqiiqo \(10 farriimood\)\!\n\nNidaamku si otomaatig ah ayuu kuu xidhay muddo 10 daqiiqo ah\.\nâ° Kusoo noqo marka ay tahay: *${unblockTime}*`,
                 { parse_mode: 'Markdown' }
             );
             return true;
@@ -162,7 +162,7 @@ function isWrongAnswerFeedback(text) {
 exports.getBotStatus = () => botStatus;
 
 
-// ─── Telegram raw API helper (for reactions & other new features) ─────────────
+// â”€â”€â”€ Telegram raw API helper (for reactions & other new features) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function telegramRawAPI(method, body = {}) {
     try {
         const token = process.env.TELEGRAM_BOT_TOKEN;
@@ -177,8 +177,8 @@ async function telegramRawAPI(method, body = {}) {
     }
 }
 
-// ─── React with emoji to a message (👀 seen indicator) ───────────────────────
-async function reactToMessage(chatId, messageId, emoji = '👀') {
+// â”€â”€â”€ React with emoji to a message (ðŸ‘€ seen indicator) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+async function reactToMessage(chatId, messageId, emoji = 'ðŸ‘€') {
     await telegramRawAPI('setMessageReaction', {
         chat_id: chatId,
         message_id: messageId,
@@ -187,8 +187,8 @@ async function reactToMessage(chatId, messageId, emoji = '👀') {
     });
 }
 
-// ─── Send animated loading message → returns {chatId, messageId} ─────────────
-async function sendLoadingMessage(chatId, text = '⏳ Xaqiijinaya...') {
+// â”€â”€â”€ Send animated loading message â†’ returns {chatId, messageId} â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+async function sendLoadingMessage(chatId, text = 'â³ Xaqiijinaya...') {
     try {
         const sent = await bot.sendMessage(chatId, text, { parse_mode: 'Markdown' });
         return { chatId, messageId: sent.message_id };
@@ -197,7 +197,7 @@ async function sendLoadingMessage(chatId, text = '⏳ Xaqiijinaya...') {
     }
 }
 
-// ─── Update a loading message with new text ───────────────────────────────────
+// â”€â”€â”€ Update a loading message with new text â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function editLoadingMessage(handle, newText) {
     if (!handle) return;
     try {
@@ -209,12 +209,12 @@ async function editLoadingMessage(handle, newText) {
     } catch (err) { /* ignore */ }
 }
 
-// ─── Delete a message ─────────────────────────────────────────────────────────
+// â”€â”€â”€ Delete a message â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function deleteMsg(chatId, messageId) {
     try { await bot.deleteMessage(chatId, messageId); } catch (err) { /* ignore */ }
 }
 
-// ─── Initialize function ───────────────────────────────────────────────────────
+// â”€â”€â”€ Initialize function â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 exports.initialize = async () => {
     try {
         console.log('[TELEGRAM BOT] Initializing...');
@@ -285,7 +285,7 @@ exports.initialize = async () => {
     }
 };
 
-// ─── Proactive Cooldown Notifier ──────────────────────────────────────────────
+// â”€â”€â”€ Proactive Cooldown Notifier â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function startProactiveChecker() {
     setInterval(async () => {
         try {
@@ -299,7 +299,7 @@ function startProactiveChecker() {
             for (const row of expired) {
                 try {
                     await bot.sendMessage(row.telegram_chat_id,
-                        "✅ Saacadihii sugitaanka waa dhammaadeen\\! Hadda waad ila hadli kartaa\\. Maxaan kaa caawin karaa?");
+                        "âœ… Saacadihii sugitaanka waa dhammaadeen\\! Hadda waad ila hadli kartaa\\. Maxaan kaa caawin karaa?");
                     await db.execute(
                         'UPDATE telegram_cooldowns SET notified_expiry = TRUE WHERE user_id = ?',
                         [row.user_id]
@@ -314,7 +314,7 @@ function startProactiveChecker() {
     }, 60000);
 }
 
-// ─── Main message handler ─────────────────────────────────────────────────────
+// â”€â”€â”€ Main message handler â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function handleIncomingMessage(msg) {
     if (!bot) return;
     const chatId = msg.chat.id;
@@ -339,14 +339,14 @@ async function handleIncomingMessage(msg) {
         return;
     }
 
-    // ── 1. Check for pending registration state (unlinked user in reg flow) ──
+    // â”€â”€ 1. Check for pending registration state (unlinked user in reg flow) â”€â”€
     const pendingState = telegramUserStates.get(`unreg_${chatId}`);
     if (pendingState) {
         await handleRegistrationFlow(msg, pendingState);
         return;
     }
 
-    // ── 2. Look up linked account ──────────────────────────────────────────────
+    // â”€â”€ 2. Look up linked account â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const [linked] = await db.execute(
         'SELECT user_id FROM telegram_users WHERE telegram_chat_id = ? LIMIT 1',
         [chatId.toString()]
@@ -363,7 +363,7 @@ async function handleIncomingMessage(msg) {
 
     const userId = linked[0].user_id;
 
-    // ── 3. Retrieve user record ────────────────────────────────────────────────
+    // â”€â”€ 3. Retrieve user record â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const [users] = await db.execute(
         'SELECT id, name, is_suspended, rate_limit_blocked_until FROM users WHERE id = ? LIMIT 1',
         [userId]
@@ -387,14 +387,14 @@ async function handleIncomingMessage(msg) {
 
     // If user shares contact again when already linked
     if (msg.contact) {
-        await bot.sendMessage(chatId, `✅ Koontadaada mar hore ayaa la xaqiijiyay! (${user.name})`);
+        await bot.sendMessage(chatId, `âœ… Koontadaada mar hore ayaa la xaqiijiyay! (${user.name})`);
         return;
     }
 
-    // ── 4. 👀 Seen reaction (cosmetic animation) ───────────────────────────────
-    await reactToMessage(chatId, msgId, '👀');
+    // â”€â”€ 4. ðŸ‘€ Seen reaction (cosmetic animation) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    await reactToMessage(chatId, msgId, 'ðŸ‘€');
 
-    // ── 4b. Rate Limiting check (1-Minute rule) ──────────────────────────────
+    // â”€â”€ 4b. Rate Limiting check (1-Minute rule) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     if (await checkTelegramRateLimit(userId, chatId)) {
         return;
     }
@@ -423,13 +423,13 @@ async function handleIncomingMessage(msg) {
         return;
     }
 
-    // ── 5. Password Reset State ───────────────────────────────────────────────
+    // â”€â”€ 5. Password Reset State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const pwState = telegramUserStates.get(`pw_${userId}`);
     if (pwState && pwState.step === 'awaiting_password') {
         const msgText = msg.text || '';
         const pwErr = validatePassword(msgText);
         if (pwErr) {
-            await bot.sendMessage(chatId, '❌ Password-ku waa inuu ahaadaa *ugu yaraan 8 xaraf*\\. Mar kale isku day:', { parse_mode: 'Markdown' });
+            await bot.sendMessage(chatId, 'âŒ Password-ku waa inuu ahaadaa *ugu yaraan 8 xaraf*\\. Mar kale isku day:', { parse_mode: 'Markdown' });
             return;
         }
         try {
@@ -437,15 +437,15 @@ async function handleIncomingMessage(msg) {
             await db.execute('UPDATE users SET password = ? WHERE id = ?', [hashed, userId]);
             telegramUserStates.delete(`pw_${userId}`);
             await bot.sendMessage(chatId,
-                '✅ *Password-kaaga waa la bedelay si guul leh\\!*\n\nHadda waad u isticmaali kartaa app\\-ka password\\-kaaga cusub\\.',
+                'âœ… *Password-kaaga waa la bedelay si guul leh\\!*\n\nHadda waad u isticmaali kartaa app\\-ka password\\-kaaga cusub\\.',
                 { parse_mode: 'Markdown' });
         } catch (err) {
-            await bot.sendMessage(chatId, '❌ Cilad ayaa ku timid. Fadlan mar kale isku day.');
+            await bot.sendMessage(chatId, 'âŒ Cilad ayaa ku timid. Fadlan mar kale isku day.');
         }
         return;
     }
 
-    // ── 6. Rate Limiting ──────────────────────────────────────────────────────
+    // â”€â”€ 6. Rate Limiting â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const now = new Date();
     const [coolRow] = await db.execute(
         'SELECT message_count, cooldown_until, last_message_at FROM telegram_cooldowns WHERE user_id = ?',
@@ -465,7 +465,7 @@ async function handleIncomingMessage(msg) {
                 const coolUntil = new Date(now.getTime() + 30 * 60000);
                 await db.execute('UPDATE telegram_cooldowns SET message_count=?, cooldown_until=?, notified_expiry=FALSE WHERE user_id=?', [newCount, coolUntil, userId]);
                 const t = coolUntil.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Africa/Mogadishu' });
-                await bot.sendMessage(chatId, `⏳ Fariimo badan ayaad soo dirtay\\. Fadlan sug ilaa *${t}*\\.`, { parse_mode: 'Markdown' });
+                await bot.sendMessage(chatId, `â³ Fariimo badan ayaad soo dirtay\\. Fadlan sug ilaa *${t}*\\.`, { parse_mode: 'Markdown' });
                 return;
             }
             await db.execute('UPDATE telegram_cooldowns SET message_count=?, notified_expiry=FALSE WHERE user_id=?', [newCount, userId]);
@@ -474,7 +474,7 @@ async function handleIncomingMessage(msg) {
         await db.execute('INSERT INTO telegram_cooldowns (user_id, message_count, cooldown_until, notified_expiry) VALUES (?,1,NULL,FALSE)', [userId]);
     }
 
-    // ── 7. Keyword Detection (password reset / report) ────────────────────────
+    // â”€â”€ 7. Keyword Detection (password reset / report) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const msgText  = msg.text || msg.caption || '';
     const cleanBody = msgText.toLowerCase().trim();
     const normBody  = cleanBody
@@ -495,12 +495,12 @@ async function handleIncomingMessage(msg) {
             if (n && n !== registered) { hasMismatch = true; break; }
         }
         if (hasMismatch) {
-            await bot.sendMessage(chatId, '❌ Numberka aad qortay iyo kan akoonkaaga ku jira isku mid maaha\\.');
+            await bot.sendMessage(chatId, 'âŒ Numberka aad qortay iyo kan akoonkaaga ku jira isku mid maaha\\.');
             return;
         }
         telegramUserStates.set(`pw_${userId}`, { step: 'awaiting_password' });
         await bot.sendMessage(chatId,
-            '🔐 *Password Beddelid*\n\nFadlan qor password\\-ka cusub ee aad rabto \\(*ugu yaraan 8 xaraf*\\):',
+            'ðŸ” *Password Beddelid*\n\nFadlan qor password\\-ka cusub ee aad rabto \\(*ugu yaraan 8 xaraf*\\):',
             { parse_mode: 'Markdown' });
         return;
     }
@@ -516,7 +516,7 @@ async function handleIncomingMessage(msg) {
         return;
     }
 
-    // ── 8. Media (Voice / Photo) ──────────────────────────────────────────────
+    // â”€â”€ 8. Media (Voice / Photo) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const isVoice = !!(msg.voice || msg.audio);
     const isPhoto  = !!(msg.photo && msg.photo.length > 0);
 
@@ -528,11 +528,11 @@ async function handleIncomingMessage(msg) {
         if (isGroup) return;
         const [wallet] = await db.execute('SELECT balance FROM user_wallet WHERE user_id=?', [userId]);
         if (!wallet.length || wallet[0].balance < 20) {
-            await bot.sendMessage(chatId, '❌ Dhibcahaagu kuma filna dhegeysiga codka *(20 Credits)*\\.', { parse_mode: 'Markdown' });
+            await bot.sendMessage(chatId, 'âŒ Dhibcahaagu kuma filna dhegeysiga codka *(20 Credits)*\\.', { parse_mode: 'Markdown' });
             return;
         }
         const fileId = msg.voice ? msg.voice.file_id : msg.audio.file_id;
-        const loadHandle = await sendLoadingMessage(chatId, '🎙️ _Dhegeysanaya codka\\.\\.\\._');
+        const loadHandle = await sendLoadingMessage(chatId, 'ðŸŽ™ï¸ _Dhegeysanaya codka\\.\\.\\._');
         try {
             const localPath = await bot.downloadFile(fileId, uploadsDir);
             processedText = await transcribeAudio(localPath, 'audio/ogg');
@@ -540,7 +540,7 @@ async function handleIncomingMessage(msg) {
             if (fs.existsSync(localPath)) fs.unlinkSync(localPath);
             await deleteMsg(chatId, loadHandle?.messageId);
         } catch (e) {
-            await editLoadingMessage(loadHandle, '❌ Waan ka xunnahay\\, codka lama fahmin\\.');
+            await editLoadingMessage(loadHandle, 'âŒ Waan ka xunnahay\\, codka lama fahmin\\.');
             return;
         }
     }
@@ -553,12 +553,12 @@ async function handleIncomingMessage(msg) {
             attachmentData = { base64: buf.toString('base64'), mimeType: 'image/jpeg' };
             if (fs.existsSync(localPath)) fs.unlinkSync(localPath);
         } catch (e) {
-            await bot.sendMessage(chatId, '❌ Sawirka laguma guulaysan in la soo dejiyo\\.');
+            await bot.sendMessage(chatId, 'âŒ Sawirka laguma guulaysan in la soo dejiyo\\.');
             return;
         }
     }
 
-    // ── 9. Credit Check ───────────────────────────────────────────────────────
+    // â”€â”€ 9. Credit Check â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     let cost = voiceCostApplied ? 20 : isPhoto ? 10 :
         (processedText.length < 150 ? 1 : processedText.length < 500 ? 3 :
          processedText.length < 1500 ? 7 : 12);
@@ -578,13 +578,13 @@ async function handleIncomingMessage(msg) {
         const [wallet] = await db.execute('SELECT balance FROM user_wallet WHERE user_id=?', [userId]);
         const balance = wallet.length ? wallet[0].balance : 0;
         if (balance < cost) {
-            await bot.sendMessage(chatId, '💳 *Credit-kaagu kuma filna\\!*\n\nKu shubo credit si aad u sii wadato isticmaalka\\.', { parse_mode: 'Markdown' });
+            await bot.sendMessage(chatId, 'ðŸ’³ *Credit-kaagu kuma filna\\!*\n\nKu shubo credit si aad u sii wadato isticmaalka\\.', { parse_mode: 'Markdown' });
             return;
         }
         await db.execute('UPDATE user_wallet SET balance=GREATEST(0,balance-?) WHERE user_id=?', [cost, userId]);
     }
 
-    // ── 10. Chat history ──────────────────────────────────────────────────────
+    // â”€â”€ 10. Chat history â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const [histRows] = await db.execute(
         'SELECT sender, message FROM messages_private WHERE user_id=? AND session_id="telegram" ORDER BY id DESC LIMIT 5',
         [userId]
@@ -594,7 +594,7 @@ async function handleIncomingMessage(msg) {
         parts: [{ text: r.message }]
     }));
 
-    // ── 11. Typing indicator + AI call ───────────────────────────────────────
+    // â”€â”€ 11. Typing indicator + AI call â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     await bot.sendChatAction(chatId, 'typing');
     await new Promise(r => setTimeout(r, 100));
     const hasCaption = processedText && processedText.trim().length > 0;
@@ -602,11 +602,11 @@ async function handleIncomingMessage(msg) {
         ? 'Fiiri sawirkan. Haddii sawirku ka kooban yahay suaalo MCQ/saxan/qaldaan: KALIYA soo qor jawaabaha kooban. Haddii ay yihiin suaalo furan ama xisaab: si kooban u xali.'
         : (processedText || 'Hello');
 
-    const systemInstruction = `You are Darkpen, a highly intelligent and friendly AI assistant developed by ZinsonAI (owned by Hamze Mohamuud Ali Zinson).
+    const systemInstruction = `You are Kaynab AI, a highly intelligent and friendly AI assistant developed by ZinsonAI (owned by Hamze Mohamuud Ali Zinson).
 Rules:
 1. IDENTITY: NEVER prepend any self-introduction banner. Only mention your name or creator if the user explicitly asks "Who are you?", "Who made you?", "Cidaa ku samaysay?".
-2. LANGUAGE: Respond in the EXACT same language the user used (Somali → Somali, English → English).
-3. EXAMS: MCQ/True-False images → only output question numbers and correct options. No explanation unless asked.
+2. LANGUAGE: Respond in the EXACT same language the user used (Somali â†’ Somali, English â†’ English).
+3. EXAMS: MCQ/True-False images â†’ only output question numbers and correct options. No explanation unless asked.
 4. Keep responses concise, direct, and helpful.
 5. Bold key terms using *Keyword*.
 6. Tables: use <table_data>Header1|Header2\\nVal1|Val2</table_data> format.
@@ -618,8 +618,8 @@ Rules:
         const formatted = formatResponseForTelegram(aiResp);
         await sendMessageWithFallback(chatId, formatted);
 
-        // Replace 👀 with ❤️ after responding
-        await reactToMessage(chatId, msgId, '❤️');
+        // Replace ðŸ‘€ with â¤ï¸ after responding
+        await reactToMessage(chatId, msgId, 'â¤ï¸');
 
         // Sequential DB saves to prevent out-of-order IDs and identical timestamps
         try {
@@ -634,11 +634,11 @@ Rules:
 
     } catch (err) {
         console.error('[TELEGRAM BOT] Gemini error:', err);
-        await bot.sendMessage(chatId, '⚠️ Waan ka xunnahay\\, Darkpen waxaa ku yimid cilad farsamo oo ku meel gaadh ah\\. Si aan hawshaadu u xanibmin\\, fadlan la xidhiidh Maamulaha: +252637930329\\.', { parse_mode: 'Markdown' });
+        await bot.sendMessage(chatId, 'âš ï¸ Waan ka xunnahay, Kaynab AI waxaa ku yimid cilad farsamo oo ku meel gaadh ah\\. Si aan hawshaadu u xanibmin\\, fadlan la xidhiidh Maamulaha: +252637930329\\.', { parse_mode: 'Markdown' });
     }
 }
 
-// ─── /start command ───────────────────────────────────────────────────────────
+// â”€â”€â”€ /start command â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function handleStartCommand(msg) {
     const chatId = msg.chat.id;
     const [linked] = await db.execute(
@@ -650,8 +650,8 @@ async function handleStartCommand(msg) {
         const [usr] = await db.execute('SELECT name FROM users WHERE id=? LIMIT 1', [linked[0].user_id]);
         const name = usr.length ? usr[0].name : 'Adeer';
         await bot.sendMessage(chatId,
-            `🤖 *Ku soo dhawaada Darkpen Bot\\!*\n\n` +
-            `Haye *${escapeMd(name)}*\\, koontadaada waa xaqiijisantahay ✅\n\n` +
+            `ðŸ¤– *Ku soo dhawaada Kaynab AI Bot\\!*\n\n` +
+            `Haye *${escapeMd(name)}*\\, koontadaada waa xaqiijisantahay âœ…\n\n` +
             `Maxaan kuu qabtaa maanta?`,
             { parse_mode: 'Markdown' }
         );
@@ -660,18 +660,18 @@ async function handleStartCommand(msg) {
     }
 }
 
-// ─── Beautiful contact prompt with styled button ───────────────────────────────
+// â”€â”€â”€ Beautiful contact prompt with styled button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function sendContactPrompt(chatId) {
     await bot.sendMessage(chatId,
-        `👋 *Ku soo dhawaada Darkpen Bot\\!* 🤖📚\n\n` +
-        `Darkpen waa AI assistant\\.ka ugu fiican Soomaalida\\!\n\n` +
-        `🔐 *Si aad u bilowdo*, fadlan xaqiiji koontadaada Darkpen\n` +
+        `ðŸ‘‹ *Ku soo dhawaada Kaynab AI Bot\\!* ðŸ¤–ðŸ“š\n\n` +
+        `Kaynab AI waa AI assistant\\.ka ugu fiican Soomaalida\\!\n\n` +
+        `ðŸ” *Si aad u bilowdo*, fadlan xaqiiji koontadaada Darkpen\n` +
         `adoo gujinaya badhanka hoose\\:`,
         {
             parse_mode: 'Markdown',
             reply_markup: {
                 keyboard: [[{
-                    text: '📱 Xaqiiji Koontadaada  ✨',
+                    text: 'ðŸ“± Xaqiiji Koontadaada  âœ¨',
                     request_contact: true
                 }]],
                 resize_keyboard: true,
@@ -681,26 +681,26 @@ async function sendContactPrompt(chatId) {
     );
 }
 
-// ─── Handle shared contact ─────────────────────────────────────────────────────
+// â”€â”€â”€ Handle shared contact â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function handleContactSharing(msg) {
     const chatId  = msg.chat.id;
     const contact = msg.contact;
 
     if (!contact || contact.user_id !== msg.from.id) {
-        await bot.sendMessage(chatId, '❌ Fadlan la wadaag *lambarkaaga saxda ah* adigoo gujinaaya badhanka\.', { parse_mode: 'Markdown' });
+        await bot.sendMessage(chatId, 'âŒ Fadlan la wadaag *lambarkaaga saxda ah* adigoo gujinaaya badhanka\.', { parse_mode: 'Markdown' });
         return;
     }
 
     // Show loading animation
     const loader = await sendLoadingMessage(chatId,
-        '🔍 _Xaqiijinaya koontadaada\.\.\._'
+        'ðŸ” _Xaqiijinaya koontadaada\.\.\._'
     );
 
     const rawPhone    = contact.phone_number;
     const normalized  = normalizePhoneNumber(rawPhone);
 
     if (!normalized) {
-        await editLoadingMessage(loader, '❌ Lambarkaagu ma saxna\. Fadlan isku day mar kale\.');
+        await editLoadingMessage(loader, 'âŒ Lambarkaagu ma saxna\. Fadlan isku day mar kale\.');
         return;
     }
 
@@ -716,7 +716,7 @@ async function handleContactSharing(msg) {
             if (user.is_suspended) {
                 await deleteMsg(chatId, loader?.messageId);
                 await bot.sendMessage(chatId,
-                    '🚫 *Koontadaada waa la xanibay\.* Fadlan la xidhiidh taageerada\.',
+                    'ðŸš« *Koontadaada waa la xanibay\.* Fadlan la xidhiidh taageerada\.',
                     { parse_mode: 'Markdown', reply_markup: { remove_keyboard: true } }
                 );
                 return;
@@ -729,14 +729,14 @@ async function handleContactSharing(msg) {
             );
 
             // Fast animation
-            await editLoadingMessage(loader, '🔍 _Xaqiijinaya koontadaada\.\.\._\n`[██████████] 100%`');
+            await editLoadingMessage(loader, 'ðŸ” _Xaqiijinaya koontadaada\.\.\._\n`[â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆ] 100%`');
             await new Promise(r => setTimeout(r, 200));
             await deleteMsg(chatId, loader?.messageId);
 
             await bot.sendMessage(chatId,
-                `✅ *Xaqiijin guul leh!* 🎉\n\n` +
+                `âœ… *Xaqiijin guul leh!* ðŸŽ‰\n\n` +
                 `Ku soo dhawaada *\${user.name}*!\n\n` +
-                `🤖 Darkpen Bot waa diyaar. Su'aashaada iigu soo dir!`,
+                `ðŸ¤– Kaynab AI Bot waa diyaar. Su'aashaada iigu soo dir!`,
                 {
                     parse_mode: 'Markdown',
                     reply_markup: { remove_keyboard: true }
@@ -746,9 +746,9 @@ async function handleContactSharing(msg) {
         }
 
         // If not registered, run a fast registration flow start animation
-        await editLoadingMessage(loader, '🔍 _Xaqiijinaya koontadaada\.\.\._\n`[████░░░░░░] 40%`');
+        await editLoadingMessage(loader, 'ðŸ” _Xaqiijinaya koontadaada\.\.\._\n`[â–ˆâ–ˆâ–ˆâ–ˆâ–‘â–‘â–‘â–‘â–‘â–‘] 40%`');
         await new Promise(r => setTimeout(r, 200));
-        await editLoadingMessage(loader, '📋 _Diyaarinaya diiwaan-gelinta\.\.\._\n`[████████░░] 80%`');
+        await editLoadingMessage(loader, 'ðŸ“‹ _Diyaarinaya diiwaan-gelinta\.\.\._\n`[â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–‘â–‘] 80%`');
         await new Promise(r => setTimeout(r, 200));
         await deleteMsg(chatId, loader?.messageId);
 
@@ -759,12 +759,12 @@ async function handleContactSharing(msg) {
         });
 
         await bot.sendMessage(chatId,
-            `👋 *Soo dhowow Darkpen!* 🤖📚\n\n` +
+            `ðŸ‘‹ *Soo dhowow Darkpen!* ðŸ¤–ðŸ“š\n\n` +
             `Lambarkan *\${escapeMd(normalized)}* lama helin diiwaanka.\n\n` +
-            `📝 *Waxaan kaa caawinayaa inaad diwaangasho hadda!*\n\n` +
-            `━━━━━━━━━━━━━━━\n` +
+            `ðŸ“ *Waxaan kaa caawinayaa inaad diwaangasho hadda!*\n\n` +
+            `â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”\n` +
             `*Tallaabada 1 / 3*\n` +
-            `👤 *Magacaaga full-name-kaaga* maxaa?\n` +
+            `ðŸ‘¤ *Magacaaga full-name-kaaga* maxaa?\n` +
             `_\\(Tusaale: Axmed Cali\\)_`,
             {
                 parse_mode: 'Markdown',
@@ -773,11 +773,11 @@ async function handleContactSharing(msg) {
         );
     } catch (err) {
         console.error('[TELEGRAM BOT] Link/Registration initiation error:', err);
-        await editLoadingMessage(loader, '❌ Cilad ayaa ku timid xaqiijinta koontadaada.');
+        await editLoadingMessage(loader, 'âŒ Cilad ayaa ku timid xaqiijinta koontadaada.');
     }
 }
 
-// ─── Registration Agent Flow ───────────────────────────────────────────────────
+// â”€â”€â”€ Registration Agent Flow â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function handleRegistrationFlow(msg, state) {
     const chatId = msg.chat.id;
     const input  = (msg.text || '').trim();
@@ -787,7 +787,7 @@ async function handleRegistrationFlow(msg, state) {
     if (state.step === 'reg_name') {
         if (input.length < 2 || input.length > 60) {
             await bot.sendMessage(chatId,
-                '❌ Fadlan magac sax ah geli \\(*2\\-60 xaraf*\\):',
+                'âŒ Fadlan magac sax ah geli \\(*2\\-60 xaraf*\\):',
                 { parse_mode: 'Markdown' }
             );
             return;
@@ -797,10 +797,10 @@ async function handleRegistrationFlow(msg, state) {
         telegramUserStates.set(`unreg_${chatId}`, state);
 
         await bot.sendMessage(chatId,
-            `✅ *${escapeMd(input)}* — waa qurux badnaan\\!\n\n` +
-            `━━━━━━━━━━━━━━━\n` +
+            `âœ… *${escapeMd(input)}* â€” waa qurux badnaan\\!\n\n` +
+            `â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”\n` +
             `*Tallaabada 2 / 3*\n` +
-            `🆔 *Username* dooro:\n` +
+            `ðŸ†” *Username* dooro:\n` +
             `_\\(3\\-30 xaraf: a\\-z, 0\\-9, \\_\\)_\n` +
             `_Tusaale: axmed\\_cali_`,
             { parse_mode: 'Markdown' }
@@ -813,7 +813,7 @@ async function handleRegistrationFlow(msg, state) {
         const usernameErr = validateUsername(username);
         if (usernameErr) {
             await bot.sendMessage(chatId,
-                `❌ *${escapeMd(usernameErr)}*\n\nMar kale isku day:`,
+                `âŒ *${escapeMd(usernameErr)}*\n\nMar kale isku day:`,
                 { parse_mode: 'Markdown' }
             );
             return;
@@ -823,7 +823,7 @@ async function handleRegistrationFlow(msg, state) {
         const [existing] = await db.execute('SELECT id FROM users WHERE username=? LIMIT 1', [username]);
         if (existing.length > 0) {
             await bot.sendMessage(chatId,
-                `❌ Username *${escapeMd(username)}* hore ayaa loo qaatay\\. Username kale isku day:`,
+                `âŒ Username *${escapeMd(username)}* hore ayaa loo qaatay\\. Username kale isku day:`,
                 { parse_mode: 'Markdown' }
             );
             return;
@@ -834,11 +834,11 @@ async function handleRegistrationFlow(msg, state) {
         telegramUserStates.set(`unreg_${chatId}`, state);
 
         await bot.sendMessage(chatId,
-            `✅ *@${escapeMd(username)}* — waa xor\\!\n\n` +
-            `━━━━━━━━━━━━━━━\n` +
+            `âœ… *@${escapeMd(username)}* â€” waa xor\\!\n\n` +
+            `â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”\n` +
             `*Tallaabada 3 / 3*\n` +
-            `🔐 *Password* dooro:\n` +
-            `_\\(ugu yaraan 8 xaraf — lama muuqdo diiwaangelinta ka dib\\)_`,
+            `ðŸ” *Password* dooro:\n` +
+            `_\\(ugu yaraan 8 xaraf â€” lama muuqdo diiwaangelinta ka dib\\)_`,
             { parse_mode: 'Markdown' }
         );
         return;
@@ -848,16 +848,16 @@ async function handleRegistrationFlow(msg, state) {
         const pwErr = validatePassword(input);
         if (pwErr) {
             await bot.sendMessage(chatId,
-                `❌ *${escapeMd(pwErr)}*\n\nMar kale isku day:`,
+                `âŒ *${escapeMd(pwErr)}*\n\nMar kale isku day:`,
                 { parse_mode: 'Markdown' }
             );
             return;
         }
 
         // Show loading animation for registration
-        const loader = await sendLoadingMessage(chatId, '⚙️ _Koontada la sameynayaa\\.\\.\\._\n`[██░░░░░░░░] 20%`');
+        const loader = await sendLoadingMessage(chatId, 'âš™ï¸ _Koontada la sameynayaa\\.\\.\\._\n`[â–ˆâ–ˆâ–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘] 20%`');
         await new Promise(r => setTimeout(r, 150));
-        await editLoadingMessage(loader, '⚙️ _Koontada la sameynayaa\\.\\.\\._\n`[█████░░░░░] 50%`');
+        await editLoadingMessage(loader, 'âš™ï¸ _Koontada la sameynayaa\\.\\.\\._\n`[â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–‘â–‘â–‘â–‘â–‘] 50%`');
 
         try {
             const hashedPw = await bcrypt.hash(input, 12);
@@ -870,7 +870,7 @@ async function handleRegistrationFlow(msg, state) {
             );
             const newUserId = result.insertId;
 
-            await editLoadingMessage(loader, '⚙️ _Koontada la sameynayaa\\.\\.\\._\n`[████████░░] 80%`');
+            await editLoadingMessage(loader, 'âš™ï¸ _Koontada la sameynayaa\\.\\.\\._\n`[â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–‘â–‘] 80%`');
             await new Promise(r => setTimeout(r, 150));
 
             // Create wallet
@@ -891,7 +891,7 @@ async function handleRegistrationFlow(msg, state) {
                 [chatId.toString(), newUserId]
             );
 
-            await editLoadingMessage(loader, '✅ _La diyaariyay\\!_\n`[██████████] 100%`');
+            await editLoadingMessage(loader, 'âœ… _La diyaariyay\\!_\n`[â–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆâ–ˆ] 100%`');
             await new Promise(r => setTimeout(r, 400));
             await deleteMsg(chatId, loader?.messageId);
 
@@ -899,38 +899,38 @@ async function handleRegistrationFlow(msg, state) {
             telegramUserStates.delete(`unreg_${chatId}`);
 
             await bot.sendMessage(chatId,
-                `🎉 *Diwaangelintaada waa guul!* 🎉\n\n` +
-                `👤 *Magaca:* ${escapeMd(state.name)}\n` +
-                `🆔 *Username:* @${escapeMd(state.username)}\n` +
-                `📱 *Lambarka:* ${escapeMd(state.phone)}\n\n` +
-                `🎁 Waxaad hadiyad ahaan u heysataa *40 Credits oo Free ah* oo aad hadda ku bilaabi karto!\n` +
-                `• *10 Credits* oo fariimaha qoraalka ah (10 Free Text Messages)\n` +
-                `• *30 Credits* oo sawirada ah (3 Free Images)\n\n` +
-                `━━━━━━━━━━━━━━━\n` +
-                `⚠️ *Ogeysiis iyo Shuruudo (Terms & Conditions):*\n` +
-                `• Haddii aad isticmaasho Telegram-kan, waxay ka dhigan tahay inaad ogolaatay shuruudaha iyo xeerarka (terms and conditions) ee app-ka Darkpen AI.\n` +
-                `• Fadlan ogoow in bot-kan aan loogu talagalin waxyaabaha sharciga ka hor imanaya ee qishka imtixaannada iyo wixii la mid ah. Isticmaalaha (user-ka) ayaa si buuxda mas'uul uga ah wixii uu u isticmaalo.\n` +
-                `• Haddii jawaabta bot-ku dib u dhacdo ama uu soo jawaabi waayo, taasi micnaheedu maaha inuu khaldan yahay, balse waa mashquul aad u badan (jam) oo ka jira qaybta Bilaashka ah (Free tier).\n` +
-                `• Fadlan save gareyso nambarkayaga oo ah *+252637930329* si aad u aragto wararkii ugu dambeeyay iyo warbixinaha status-keena.\n` +
-                `━━━━━━━━━━━━━━━\n\n` +
-                `📚 *Darkpen AI wuxuu kaa caawinayaa waxbarashada, sawirada, xallinta su'aalaha, iyo wax kasta oo aad u baahan tahay!*\n` +
-                `💳 Marka ay kaa dhamaadaan free-gu, waxaad ku shuban kartaa *$0.50* (100 credits):\n` +
+                `ðŸŽ‰ *Diwaangelintaada waa guul!* ðŸŽ‰\n\n` +
+                `ðŸ‘¤ *Magaca:* ${escapeMd(state.name)}\n` +
+                `ðŸ†” *Username:* @${escapeMd(state.username)}\n` +
+                `ðŸ“± *Lambarka:* ${escapeMd(state.phone)}\n\n` +
+                `ðŸŽ Waxaad hadiyad ahaan u heysataa *40 Credits oo Free ah* oo aad hadda ku bilaabi karto!\n` +
+                `â€¢ *10 Credits* oo fariimaha qoraalka ah (10 Free Text Messages)\n` +
+                `â€¢ *30 Credits* oo sawirada ah (3 Free Images)\n\n` +
+                `â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”\n` +
+                `âš ï¸ *Ogeysiis iyo Shuruudo (Terms & Conditions):*\n` +
+                `â€¢ Haddii aad isticmaasho Telegram-kan, waxay ka dhigan tahay inaad ogolaatay shuruudaha iyo xeerarka (terms and conditions) ee app-ka Darkpen AI.\n` +
+                `â€¢ Fadlan ogoow in bot-kan aan loogu talagalin waxyaabaha sharciga ka hor imanaya ee qishka imtixaannada iyo wixii la mid ah. Isticmaalaha (user-ka) ayaa si buuxda mas'uul uga ah wixii uu u isticmaalo.\n` +
+                `â€¢ Haddii jawaabta bot-ku dib u dhacdo ama uu soo jawaabi waayo, taasi micnaheedu maaha inuu khaldan yahay, balse waa mashquul aad u badan (jam) oo ka jira qaybta Bilaashka ah (Free tier).\n` +
+                `â€¢ Fadlan save gareyso nambarkayaga oo ah *+252637930329* si aad u aragto wararkii ugu dambeeyay iyo warbixinaha status-keena.\n` +
+                `â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”\n\n` +
+                `ðŸ“š *Kaynab AI wuxuu kaa caawinayaa waxbarashada, sawirada, xallinta su'aalaha, iyo wax kasta oo aad u baahan tahay!*\n` +
+                `ðŸ’³ Marka ay kaa dhamaadaan free-gu, waxaad ku shuban kartaa *$0.50* (100 credits):\n` +
                 `EVC Plus: *\\*771\\*637930329\\*lacagta\\#*\n` +
                 `ZAAD: *\\*220\\*637930329\\*lacagta\\#*\n` +
                 `eDahab: *\\*700\\*659119779\\*lacagta\\#*\n` +
                 `Ka dib screenshot WhatsApp-ka u dir: *\\+252637930329*\n\n` +
-                `🤖 Su'aashaada iigu soo dir qoraal, sawir ama cod!`,
+                `ðŸ¤– Su'aashaada iigu soo dir qoraal, sawir ama cod!`,
                 { parse_mode: 'Markdown' }
             );
         } catch (err) {
             console.error('[TELEGRAM BOT] Registration error:', err);
-            await editLoadingMessage(loader, '❌ Cilad farsamo ayaa ku timid\\. Mar kale /start isku day\\.');
+            await editLoadingMessage(loader, 'âŒ Cilad farsamo ayaa ku timid\\. Mar kale /start isku day\\.');
             telegramUserStates.delete(`unreg_${chatId}`);
         }
     }
 }
 
-// ─── User Report ──────────────────────────────────────────────────────────────
+// â”€â”€â”€ User Report â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function sendUserReport(chatId, userId) {
     try {
         const [rows] = await db.execute(`
@@ -943,7 +943,7 @@ async function sendUserReport(chatId, userId) {
             FROM users u WHERE u.id=?`, [userId]);
 
         if (!rows.length) {
-            await bot.sendMessage(chatId, '❌ Xogtaada lama heli karo\\.', { parse_mode: 'Markdown' });
+            await bot.sendMessage(chatId, 'âŒ Xogtaada lama heli karo\\.', { parse_mode: 'Markdown' });
             return;
         }
         const d = rows[0];
@@ -953,30 +953,30 @@ async function sendUserReport(chatId, userId) {
             const days = Math.ceil((new Date(d.sub_expiry) - new Date()) / 86400000);
             plan = `${name} \\(${days} casho\\)`;
         }
-        const status = d.is_suspended ? '🚫 Xaniban' : '✅ Firfircoon';
+        const status = d.is_suspended ? 'ðŸš« Xaniban' : 'âœ… Firfircoon';
 
         await sendMessageWithFallback(chatId,
-            `📊 *DARKPEN REPORT*\n` +
-            `━━━━━━━━━━━━━━━\n` +
-            `👤 *Magaca:* ${escapeMd(d.name)}\n` +
-            `🆔 *Username:* @${escapeMd(d.username || 'ma jiro')}\n` +
-            `📅 *Ku biiray:* ${new Date(d.created_at).toLocaleDateString('so-SO')}\n` +
-            `💎 *Credits:* ${d.credits || 0}\n` +
-            `💬 *App chats:* ${d.app_count || 0}\n` +
-            `📱 *Telegram chats:* ${d.tg_count || 0}\n` +
-            `🏆 *XP:* ${d.xp || 0}\n` +
-            `💳 *Plan:* ${plan}\n` +
-            `🔒 *Status:* ${status}\n` +
-            `━━━━━━━━━━━━━━━\n` +
-            `Mahadsanid, sii wad isticmaalka Darkpen\\! 🚀`
+            `ðŸ“Š *KAYNAB AI REPORT*\n` +
+            `â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”\n` +
+            `ðŸ‘¤ *Magaca:* ${escapeMd(d.name)}\n` +
+            `ðŸ†” *Username:* @${escapeMd(d.username || 'ma jiro')}\n` +
+            `ðŸ“… *Ku biiray:* ${new Date(d.created_at).toLocaleDateString('so-SO')}\n` +
+            `ðŸ’Ž *Credits:* ${d.credits || 0}\n` +
+            `ðŸ’¬ *App chats:* ${d.app_count || 0}\n` +
+            `ðŸ“± *Telegram chats:* ${d.tg_count || 0}\n` +
+            `ðŸ† *XP:* ${d.xp || 0}\n` +
+            `ðŸ’³ *Plan:* ${plan}\n` +
+            `ðŸ”’ *Status:* ${status}\n` +
+            `â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”\n` +
+            `Mahadsanid, sii wad isticmaalka Kaynab AI\\! ðŸš€`
         );
     } catch (err) {
         console.error('[TELEGRAM BOT] Report error:', err.message);
-        await bot.sendMessage(chatId, '❌ Cilad ayaa ku timid helida xogtaada\\.', { parse_mode: 'Markdown' });
+        await bot.sendMessage(chatId, 'âŒ Cilad ayaa ku timid helida xogtaada\\.', { parse_mode: 'Markdown' });
     }
 }
 
-// ─── sendMessageWithFallback ──────────────────────────────────────────────────
+// â”€â”€â”€ sendMessageWithFallback â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function sendMessageWithFallback(chatId, text, opts = {}) {
     try {
         return await bot.sendMessage(chatId, text, { parse_mode: 'Markdown', ...opts });
@@ -991,7 +991,7 @@ async function sendMessageWithFallback(chatId, text, opts = {}) {
     }
 }
 
-// ─── Format AI response for Telegram Markdown ─────────────────────────────────
+// â”€â”€â”€ Format AI response for Telegram Markdown â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function formatResponseForTelegram(text) {
     if (!text) return '';
     let f = text;
@@ -1006,7 +1006,7 @@ function formatResponseForTelegram(text) {
         let out = '\n*Xogta Shaxda:*\n';
         rows.forEach(row => {
             out += '------------------\n';
-            row.forEach((col, i) => { out += `• *${headers[i] || ''}:* ${col}\n`; });
+            row.forEach((col, i) => { out += `â€¢ *${headers[i] || ''}:* ${col}\n`; });
         });
         out += '------------------\n';
         return out;
@@ -1014,17 +1014,17 @@ function formatResponseForTelegram(text) {
     f = f.replace(/^(#{1,6})\s+(.+)$/gm, '*$2*');
     f = f.replace(/\*\*([\s\S]*?)\*\*/g, '*$1*');
     f = f.replace(/__([\s\S]*?)__/g, '_$1_');
-    f = f.replace(/^\s*[*\-]\s+/gm, '• ');
+    f = f.replace(/^\s*[*\-]\s+/gm, 'â€¢ ');
     f = f.replace(/```[a-zA-Z0-9-]+\n/g, '```\n');
     return f;
 }
 
-// ─── Escape Markdown V2 special chars ─────────────────────────────────────────
+// â”€â”€â”€ Escape Markdown V2 special chars â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function escapeMd(text = '') {
     return String(text).replace(/([_*[\]()~`>#+\-=|{}.!\\])/g, '\\$1');
 }
 
-// ─── Password Reset Keyword Checker ───────────────────────────────────────────
+// â”€â”€â”€ Password Reset Keyword Checker â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function _checkPwReset(body) {
     return body.includes('password reset') || body.includes('reset password') ||
         body.includes('forgot password') || body.includes('forget password') ||
@@ -1041,7 +1041,7 @@ function _checkPwReset(body) {
         body.includes('password ilaaway') || body.includes('furaheygii ilaaway');
 }
 
-// ─── Group Message Handler ───────────────────────────────────────────────────
+// â”€â”€â”€ Group Message Handler â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function handleGroupMessage(msg) {
     const chatId = msg.chat.id;
     const msgId = msg.message_id;
@@ -1078,9 +1078,9 @@ async function handleGroupMessage(msg) {
             if (!groupWarningsSent.has(warnedKey)) {
                 groupWarningsSent.add(warnedKey);
                 setTimeout(() => groupWarningsSent.delete(warnedKey), 5 * 60000);
-                await bot.sendMessage(chatId, "Fadlan ku noqo Telegram-ka Darkpen (luuqa/DM-ka) si aad u sii waddo shaqadii noo socotey.", { reply_to_message_id: msgId });
+                await bot.sendMessage(chatId, "Fadlan ku noqo Telegram-ka Kaynab AI (luuqa/DM-ka) si aad u sii waddo shaqadii noo socotey.", { reply_to_message_id: msgId });
             } else {
-                await reactToMessage(chatId, msgId, '🚫');
+                await reactToMessage(chatId, msgId, 'ðŸš«');
             }
             return; // Intercept and ignore group message processing
         }
@@ -1094,7 +1094,7 @@ async function handleGroupMessage(msg) {
     if (!isMentioned && !isReplyToBot) {
         // 3% chance of commenting randomly on any text that talks about AI/technology/Darkpen to make it interactive!
         const words = text.toLowerCase();
-        const keywords = ['darkpen', 'ai', 'gemini', 'chatgpt', 'bot', 'fariin', 'credits', 'waxbarasho', 'baro', 'programming'];
+        const keywords = ['kaynab ai', 'ai', 'gemini', 'chatgpt', 'bot', 'fariin', 'credits', 'waxbarasho', 'baro', 'programming'];
         const hasKeyword = keywords.some(k => words.includes(k));
         
         if (hasKeyword && Math.random() < 0.03) {
@@ -1118,17 +1118,17 @@ async function handleGroupMessage(msg) {
     validTimestamps.push(now);
     groupLimits.set(chatId, validTimestamps);
     
-    // Send seen reaction 👀
-    await reactToMessage(chatId, msgId, '👀');
+    // Send seen reaction ðŸ‘€
+    await reactToMessage(chatId, msgId, 'ðŸ‘€');
     await bot.sendChatAction(chatId, 'typing');
     
     // System Instruction for Group
-    const groupInstruction = `You are Darkpen, a witty, humorous, and tech-savvy AI assistant and active team member of the Darkpen app, developed by ZinsonAI.
+    const groupInstruction = `You are Kaynab AI, a witty, humorous, and tech-savvy AI assistant and active team member of the Darkpen app, developed by ZinsonAI.
 Rules:
 1. TALK ONLY about the Darkpen app, AI models (like Gemini, ChatGPT, Claude), technology, learning, or productivity. If someone asks something completely unrelated, playfully redirect them back to technology or Darkpen.
 2. TONE: Be highly humorous, entertaining, and witty. Use natural Somali slang (e.g. "sxb", "bahalka", "xaaladu waa kacsantahay", "asaageena", "heer sare") or English depending on the user's language.
 3. Keep replies very short and punchy (1-3 sentences maximum).
-4. Act as a proud team member of Darkpen. If someone mentions a competitor (like ChatGPT), playfully claim Darkpen is better or faster for Somalis.
+4. Act as a proud team member of Kaynab AI. If someone mentions a competitor (like ChatGPT), playfully claim Darkpen is better or faster for Somalis.
 5. Do NOT use markdown headers or heavy formatting. Keep it clean.`;
 
     let finalPrompt = text.replace(botMention, '').trim();
@@ -1145,16 +1145,16 @@ Rules:
             parse_mode: 'Markdown'
         });
         
-        // React with ❤️
-        await reactToMessage(chatId, msgId, '❤️');
+        // React with â¤ï¸
+        await reactToMessage(chatId, msgId, 'â¤ï¸');
     } catch (err) {
         console.error('[TELEGRAM BOT] Group reply error:', err);
     }
 }
 
-// ─── Trigger Daily Tip Generation ────────────────────────────────────────────
+// â”€â”€â”€ Trigger Daily Tip Generation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-// ─── Handle Callback Query (Moderation Buttons) ──────────────────────────────
+// â”€â”€â”€ Handle Callback Query (Moderation Buttons) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function handleCallbackQuery(callbackQuery) {
     const message = callbackQuery.message;
     const data = callbackQuery.data;
@@ -1176,7 +1176,7 @@ async function handleCallbackQuery(callbackQuery) {
     const post = pendingPosts.get(postId);
 
     if (!post) {
-        await bot.sendMessage(ownerChatId, '⚠️ Fariintan lama helin ama mar hore ayaa la goostay.');
+        await bot.sendMessage(ownerChatId, 'âš ï¸ Fariintan lama helin ama mar hore ayaa la goostay.');
         // Remove the inline keyboard from old message
         try {
             await bot.editMessageReplyMarkup({ inline_keyboard: [] }, {
@@ -1205,7 +1205,7 @@ async function handleCallbackQuery(callbackQuery) {
             if (process.env.TELEGRAM_CHANNEL_ID) {
                 try {
                     await bot.sendMessage(process.env.TELEGRAM_CHANNEL_ID, post.content, { parse_mode: 'Markdown' });
-                    postedTo.push('Channel (@darkpenapp)');
+                    postedTo.push('Channel (@kaynabaiai)');
                 } catch(e) {
                     // Try without markdown if formatting fails
                     try {
@@ -1235,17 +1235,17 @@ async function handleCallbackQuery(callbackQuery) {
         }
         
         if (postedTo.length > 0) {
-            await bot.sendMessage(ownerChatId, `✅ Waa la daabacay!\n\n📍 Halka loo dhigay: ${postedTo.join(', ')}`);
+            await bot.sendMessage(ownerChatId, `âœ… Waa la daabacay!\n\nðŸ“ Halka loo dhigay: ${postedTo.join(', ')}`);
         }
         if (errors.length > 0) {
-            await bot.sendMessage(ownerChatId, `⚠️ Qaarkood way fashilantay:\n${errors.join('\n')}`);
+            await bot.sendMessage(ownerChatId, `âš ï¸ Qaarkood way fashilantay:\n${errors.join('\n')}`);
         }
     } else {
-        await bot.sendMessage(ownerChatId, '❌ Waa la diiday. Fariintu lama daabacin.');
+        await bot.sendMessage(ownerChatId, 'âŒ Waa la diiday. Fariintu lama daabacin.');
     }
 }
 
-// ─── Daily & Saturday Scheduler Checker ──────────────────────────────────────
+// â”€â”€â”€ Daily & Saturday Scheduler Checker â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function startSchedulerChecker() {
     const schedulerFile = path.join(__dirname, '../uploads/telegram_scheduler.json');
     

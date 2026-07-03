@@ -1,4 +1,4 @@
-const fs = require('fs');
+﻿const fs = require('fs');
 const path = require('path');
 const https = require('https');
 
@@ -78,7 +78,7 @@ const userStates = new TimestampedMap();
 // Cache of recently processed message IDs to prevent duplicates
 const processedMessageIds = new Set();
 
-// Per-user serial queue — serializes messages from the same user to prevent
+// Per-user serial queue â€” serializes messages from the same user to prevent
 // DB race conditions. Different users are handled fully in parallel.
 const messageQueue = new TaskQueue();
 // Legacy map kept for backwards-compat (unused)
@@ -133,7 +133,7 @@ async function checkRateLimit(userId, from) {
             );
             await sendCloudMessage(
                 from,
-                "⚠️ Waxaad gaadhay xadka farriimaha (Xeerka 1-Minute). Fadlan dib ugu soo laabo marka uu dhammaado waqtiga xannibaadda (10 daqiiqo)."
+                "âš ï¸ Waxaad gaadhay xadka farriimaha (Xeerka 1-Minute). Fadlan dib ugu soo laabo marka uu dhammaado waqtiga xannibaadda (10 daqiiqo)."
             );
             return true;
         }
@@ -374,8 +374,8 @@ exports.handleWebhookPost = (req, res) => {
                 return;
             }
             processedMessageIds.add(messageId);
-            // ✅ Instantly send 👀 reaction so user knows message was received
-            sendCloudReaction(from, messageId, '👀').catch(err => {
+            // âœ… Instantly send ðŸ‘€ reaction so user knows message was received
+            sendCloudReaction(from, messageId, 'ðŸ‘€').catch(err => {
                 console.warn('[WHATSAPP CLOUD] Could not send seen reaction:', err.message);
             });
             if (processedMessageIds.size > 200) {
@@ -453,37 +453,37 @@ async function processIncomingMessage(from, messageId, type, messageText, mediaI
         [normalizedPhone]
     );
 
-    // If user not registered — start registration flow
+    // If user not registered â€” start registration flow
     if (users.length === 0) {
         const regState = userStates.get(`reg_${from}`);
 
-        // Step 0: New visitor — ask if they want to register
+        // Step 0: New visitor â€” ask if they want to register
         if (!regState) {
             userStates.set(`reg_${from}`, { step: 'ask_register' });
             await sendCloudMessage(
                 from,
-                `👋 *Ahlan, ku soo dhawow Darkpen AI!*\n\n` +
-                `Waxaan ahay caawiyahaaga waxbarashada ee ku shaqeeya sirdoonka macmalka ah. Diiwaangelintan waxay kaa caawin doontaa oo keliya inaad hadhow ku gasho abka Darkpen (Darkpen App) ee moobilka.\n\n` +
+                `ðŸ‘‹ *Ahlan, ku soo dhawow Kaynab AI!*\n\n` +
+                `Waxaan ahay caawiyahaaga waxbarashada ee ku shaqeeya sirdoonka macmalka ah. Diiwaangelintan waxay kaa caawin doontaa oo keliya inaad hadhow ku gasho abka Darkpen (Kaynab AI App) ee moobilka.\n\n` +
                 `Ma rabtaa inaan hadda ku diiwaangeliyo? (Haa / Maya)`
             );
             return;
         }
 
-        // Step 1: User said yes — ask for name
+        // Step 1: User said yes â€” ask for name
         if (regState.step === 'ask_register') {
             if (isYesResponse(messageText)) {
                 userStates.set(`reg_${from}`, { step: 'awaiting_name' });
-                await sendCloudMessage(from, `✅ Wanaagsan! Waxaan kaa codsanayaa macluumaad yar.\n\n👤 Fadlan ii qor *magacaaga buuxa* (tusaale: Axmed Xasan):`);
+                await sendCloudMessage(from, `âœ… Wanaagsan! Waxaan kaa codsanayaa macluumaad yar.\n\nðŸ‘¤ Fadlan ii qor *magacaaga buuxa* (tusaale: Axmed Xasan):`);
             } else if (isNoResponse(messageText)) {
                 userStates.delete(`reg_${from}`);
-                await sendCloudMessage(from, `Awright! Markasta oo aad rabto inaad isdiiwaangeliso, igu soo qor.\n\nAllaha kaa gargaaro! 🙏`);
+                await sendCloudMessage(from, `Awright! Markasta oo aad rabto inaad isdiiwaangeliso, igu soo qor.\n\nAllaha kaa gargaaro! ðŸ™`);
             } else {
                 await sendCloudMessage(from, `Fadlan ku jawaab *Haa* si aan kuu diiwaangeliyo, ama *Maya*.\n\nXogtan waxay kaa caawinaysaa oo keliya inaad hadhow ku gasho App-ka Darkpen. Ma ku diiwaangeliyaa?`);
             }
             return;
         }
 
-        // Step 2: Collect name → auto-generate username → go straight to password
+        // Step 2: Collect name â†’ auto-generate username â†’ go straight to password
         if (regState.step === 'awaiting_name') {
             const name = messageText.trim();
             if (!name || name.length < 2 || name.length > 100) {
@@ -494,7 +494,7 @@ async function processIncomingMessage(from, messageId, type, messageText, mediaI
             // Auto-generate a unique username: first word of name (a-z only) + 4 random digits
             const baseUsername = name.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 12) || 'user';
             let username = baseUsername + Math.floor(1000 + Math.random() * 9000);
-            // Ensure uniqueness — retry up to 5 times if taken
+            // Ensure uniqueness â€” retry up to 5 times if taken
             for (let i = 0; i < 5; i++) {
                 const [taken] = await db.execute('SELECT id FROM users WHERE username = ? LIMIT 1', [username]);
                 if (taken.length === 0) break;
@@ -502,7 +502,7 @@ async function processIncomingMessage(from, messageId, type, messageText, mediaI
             }
 
             userStates.set(`reg_${from}`, { step: 'awaiting_reg_password', name, username });
-            await sendCloudMessage(from, `👌 Wanaagsan, *${name}*!\n\n🔒 Hadda samee *password* adag:\n_(Ugu yaraan 8 xaraf, ugu badnaan 100 xaraf)_`);
+            await sendCloudMessage(from, `ðŸ‘Œ Wanaagsan, *${name}*!\n\nðŸ”’ Hadda samee *password* adag:\n_(Ugu yaraan 8 xaraf, ugu badnaan 100 xaraf)_`);
             return;
         }
 
@@ -510,7 +510,7 @@ async function processIncomingMessage(from, messageId, type, messageText, mediaI
         if (regState.step === 'awaiting_reg_password') {
             const passwordError = validatePassword(messageText);
             if (passwordError) {
-                await sendCloudMessage(from, `⚠️ ${passwordError}\n\nFadlan mar kale qor password:`);
+                await sendCloudMessage(from, `âš ï¸ ${passwordError}\n\nFadlan mar kale qor password:`);
                 return;
             }
             try {
@@ -523,17 +523,17 @@ async function processIncomingMessage(from, messageId, type, messageText, mediaI
                 userStates.delete(`reg_${from}`);
                 await sendCloudMessage(
                     from,
-                    `🎉 *Waad ku guulaysatay diiwaangelinta!*\n\n` +
-                    `📋 *Xogta akoonkaaga:*\n` +
-                    `• *Magac:* ${regState.name}\n` +
-                    `• *Username:* @${regState.username}\n` +
-                    `• *Lambarka:* ${normalizedPhone}\n\n` +
-                    `Xogtaan waxay kaa caawin doontaa inaad hadhow ku gasho abka Darkpen (Darkpen App) ee moobilka. Hadda waxaad ila hadli kartaa anigoo ah AI-gaaga gaarka ah. Maxaan kuu qabtaa? 🚀`
+                    `ðŸŽ‰ *Waad ku guulaysatay diiwaangelinta!*\n\n` +
+                    `ðŸ“‹ *Xogta akoonkaaga:*\n` +
+                    `â€¢ *Magac:* ${regState.name}\n` +
+                    `â€¢ *Username:* @${regState.username}\n` +
+                    `â€¢ *Lambarka:* ${normalizedPhone}\n\n` +
+                    `Xogtaan waxay kaa caawin doontaa inaad hadhow ku gasho abka Darkpen (Kaynab AI App) ee moobilka. Hadda waxaad ila hadli kartaa anigoo ah AI-gaaga gaarka ah. Maxaan kuu qabtaa? ðŸš€`
                 );
             } catch (err) {
                 console.error('[WHATSAPP CLOUD] Registration DB error:', err.message);
                 userStates.delete(`reg_${from}`);
-                await sendCloudMessage(from, `❌ Waan ka xunnahay, cilad ayaa ku timid. Fadlan dib isku day.\n\nHaddii ay sii wadato, la xiriir maamulaha: +252637930329`);
+                await sendCloudMessage(from, `âŒ Waan ka xunnahay, cilad ayaa ku timid. Fadlan dib isku day.\n\nHaddii ay sii wadato, la xiriir maamulaha: +252637930329`);
             }
             return;
         }
@@ -631,11 +631,11 @@ async function processIncomingMessage(from, messageId, type, messageText, mediaI
                     from,
                     `Waxaad dooratay: *${planDesc}*\n\n` +
                     `Fadlan lacagta ku soo dir:\n` +
-                    `• *EVC Plus:* Garaac *771*637930329*${amount}#\n` +
-                    `• *ZAAD:* Garaac *220*637930329*${amount}#\n` +
-                    `• *eDahab:* Garaac *700*659119779*${amount}#\n\n` +
-                    `ℹ️ EVC Plus iyo ZAAD waxay wadaagaan isku number: *637930329*\n` +
-                    `ℹ️ eDahab number: *659119779*\n\n` +
+                    `â€¢ *EVC Plus:* Garaac *771*637930329*${amount}#\n` +
+                    `â€¢ *ZAAD:* Garaac *220*637930329*${amount}#\n` +
+                    `â€¢ *eDahab:* Garaac *700*659119779*${amount}#\n\n` +
+                    `â„¹ï¸ EVC Plus iyo ZAAD waxay wadaagaan isku number: *637930329*\n` +
+                    `â„¹ï¸ eDahab number: *659119779*\n\n` +
                     `Markaad lacagta soo dirtid, fadlan halkan ku soo qor *lambarka aad lacagta KA soo dirtay* (tusaale: 63#######) si aan u hubinno:`
                 );
             } else {
@@ -685,17 +685,17 @@ async function processIncomingMessage(from, messageId, type, messageText, mediaI
                 );
 
                 // Notify admin via Telegram!
-                const tgMessage = `🔔 <b>DALAB LACAGEED OO CUSUB (WhatsApp Bot)!</b>\n\n` +
-                    `👤 <b>Macaamilka:</b> ${user.name || 'Unknown'}\n` +
-                    `💰 <b>Lacagta:</b> $${amount}\n` +
-                    `📋 <b>Qorshaha:</b> ${planName}\n` +
-                    `📞 <b>Lambarka u soo diray:</b> ${senderNum}\n` +
-                    `📅 <b>Taariikhda:</b> ${new Date().toLocaleString('en-US')}\n\n` +
+                const tgMessage = `ðŸ”” <b>DALAB LACAGEED OO CUSUB (WhatsApp Bot)!</b>\n\n` +
+                    `ðŸ‘¤ <b>Macaamilka:</b> ${user.name || 'Unknown'}\n` +
+                    `ðŸ’° <b>Lacagta:</b> $${amount}\n` +
+                    `ðŸ“‹ <b>Qorshaha:</b> ${planName}\n` +
+                    `ðŸ“ž <b>Lambarka u soo diray:</b> ${senderNum}\n` +
+                    `ðŸ“… <b>Taariikhda:</b> ${new Date().toLocaleString('en-US')}\n\n` +
                     `<i>Fadlan gal Admin Dashboard si aad u xaqiijiso ama u diido.</i>`;
                 
                 await sendTelegramAdminNotification(tgMessage);
 
-                await sendCloudMessage(from, "Codsigaaga ku shubashada lacagta waa la diray oo waa la hubinayaa. Fadlan sug inta laga soo tasdiqinayo. Waad mahadsan tahay! 🙏");
+                await sendCloudMessage(from, "Codsigaaga ku shubashada lacagta waa la diray oo waa la hubinayaa. Fadlan sug inta laga soo tasdiqinayo. Waad mahadsan tahay! ðŸ™");
                 userStates.delete(`reg_${from}`);
             } catch (err) {
                 console.error('[WHATSAPP CLOUD] Payment submission error:', err.message);
@@ -731,17 +731,17 @@ async function processIncomingMessage(from, messageId, type, messageText, mediaI
         return;
     }
 
-    // ─── Password Reset Flow ──────────────────────────────────────────────────────
+    // â”€â”€â”€ Password Reset Flow â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const cleanBody = (messageText || '').toLowerCase().trim();
     // Normalize common typos before keyword matching
     const normalizedBody = cleanBody
-        .replace(/resset/g, 'reset')     // password resset → password reset
+        .replace(/resset/g, 'reset')     // password resset â†’ password reset
         .replace(/ressett/g, 'reset')
-        .replace(/passward/g, 'password') // passward → password
-        .replace(/pasword/g, 'password')  // pasword → password
-        .replace(/passwrod/g, 'password') // passwrod → password
-        .replace(/pssword/g, 'password')  // pssword → password
-        .replace(/paswword/g, 'password') // paswword → password
+        .replace(/passward/g, 'password') // passward â†’ password
+        .replace(/pasword/g, 'password')  // pasword â†’ password
+        .replace(/passwrod/g, 'password') // passwrod â†’ password
+        .replace(/pssword/g, 'password')  // pssword â†’ password
+        .replace(/paswword/g, 'password') // paswword â†’ password
         .replace(/ilaawey/g, 'ilaaway')   // Somali typos
         .replace(/ilaawaye/g, 'ilaaway')
         .replace(/illaaway/g, 'ilaaway')
@@ -768,24 +768,24 @@ async function processIncomingMessage(from, messageId, type, messageText, mediaI
         return;
     }
 
-    // ─── Help Guide Consent Flow ───
+    // â”€â”€â”€ Help Guide Consent Flow â”€â”€â”€
     if (state && state.step === 'awaiting_whatsapp_help_consent') {
         if (isYesResponse(cleanBody)) {
             userStates.delete(userId);
             await sendCloudMessage(from,
-                `*SIDA UU U SHAQEYNYO WHATSAPP BOT-KU* 📱🚀\n` +
+                `*SIDA UU U SHAQEYNYO WHATSAPP BOT-KU* ðŸ“±ðŸš€\n` +
                 `----------------------------------\n` +
                 `1. *Qoraalka & AI:* Si caadi ah iila hadal, wax ii weydii, iigana sheekeyso wax kasta. Waxaan kuugu jawaabayaa isla luuqadda aad igu qortay.\n` +
                 `2. *Sawirro (Images):* Iisoo dir sawir kasta (MCQ, xisaab, ama sharaxaad). Waxaan kuu soo saarayaa jawaabaha saxda ah si degdeg ah.\n` +
                 `3. *Codadka (Voice Notes):* Iisoo dir fariin cod ah, waan ku dhageysanayaa, waanan kuu sharxayaa.\n` +
                 `4. *Report:* Qor *report* mar kasta oo aad rabto inaad ogaato dhibcahaaga (credits) iyo qorshahaaga.\n` +
                 `5. *Password Reset:* Qor *password reset* haddii aad rabto inaad bedesho furahaaga sirta ah.\n\n` +
-                `Maxaan hadda kaa caawiyaa? 😊`
+                `Maxaan hadda kaa caawiyaa? ðŸ˜Š`
             );
             return;
         } else if (isNoResponse(cleanBody)) {
             userStates.delete(userId);
-            await sendCloudMessage(from, "Haye, diyaar ayaan kuu ahay. Maxaan hadda kuu qabtaa? 🚀");
+            await sendCloudMessage(from, "Haye, diyaar ayaan kuu ahay. Maxaan hadda kuu qabtaa? ðŸš€");
             return;
         } else {
             // Do not force yes/no response, clear state and fall through to process query
@@ -808,7 +808,7 @@ async function processIncomingMessage(from, messageId, type, messageText, mediaI
         body.includes("can't log in") ||
         body.includes('reset my password') ||
         body.includes('update password') ||
-        // Somali phrases – natural speech
+        // Somali phrases â€“ natural speech
         (body.includes('password') && (
             body.includes('badal') ||
             body.includes('ilaaways') ||
@@ -892,7 +892,7 @@ async function processIncomingMessage(from, messageId, type, messageText, mediaI
         return;
     }
 
-    // ─── WhatsApp Report Request Flow ─────────────────────────────────────────────
+    // â”€â”€â”€ WhatsApp Report Request Flow â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const isReportRequest = 
         cleanBody === 'report' ||
         cleanBody.includes('xogteyda') ||
@@ -928,18 +928,18 @@ async function processIncomingMessage(from, messageId, type, messageText, mediaI
                     planText = `${planName} (${daysLeft} casho ayaa u hadhay)`;
                 }
 
-                const reportMessage = `*DARKPEN REPORT* 📝📚\n` +
+                const reportMessage = `*KAYNAB AI REPORT* ðŸ“ðŸ“š\n` +
                   `----------------------------------\n` +
-                  `👤 *Magaca:* ${userData.name}\n` +
-                  `🆔 *Username:* @${userData.username || 'ma jiro'}\n` +
-                  `📅 *Ku biiray:* ${dateJoined}\n` +
-                  `💎 *Credits-ka Wallet:* ${userData.credits || 0}\n` +
-                  `💬 *Wada-sheekaysiga AI:* ${userData.app_messages_count || 0}\n` +
-                  `💬 *Wada-sheekaysiga WhatsApp:* ${userData.whatsapp_messages_count || 0}\n` +
-                  `🏆 *Dhibcaha Tartanka (XP):* ${userData.xp || 0} XP\n` +
-                  `💳 *Qorshaha (Plan):* ${planText}\n` +
-                  `🔒 *Status-ka:* ${statusText}\n\n` +
-                  `Mahadsanid, sii wad isticmaalka Darkpen! 🚀`;
+                  `ðŸ‘¤ *Magaca:* ${userData.name}\n` +
+                  `ðŸ†” *Username:* @${userData.username || 'ma jiro'}\n` +
+                  `ðŸ“… *Ku biiray:* ${dateJoined}\n` +
+                  `ðŸ’Ž *Credits-ka Wallet:* ${userData.credits || 0}\n` +
+                  `ðŸ’¬ *Wada-sheekaysiga AI:* ${userData.app_messages_count || 0}\n` +
+                  `ðŸ’¬ *Wada-sheekaysiga WhatsApp:* ${userData.whatsapp_messages_count || 0}\n` +
+                  `ðŸ† *Dhibcaha Tartanka (XP):* ${userData.xp || 0} XP\n` +
+                  `ðŸ’³ *Qorshaha (Plan):* ${planText}\n` +
+                  `ðŸ”’ *Status-ka:* ${statusText}\n\n` +
+                  `Mahadsanid, sii wad isticmaalka Kaynab AI! ðŸš€`;
 
                 await sendCloudMessage(from, reportMessage);
             } else {
@@ -952,7 +952,7 @@ async function processIncomingMessage(from, messageId, type, messageText, mediaI
         return;
     }
 
-    // ─── WhatsApp Payment Request Flow ─────────────────────────────────────────────
+    // â”€â”€â”€ WhatsApp Payment Request Flow â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
     const isPaymentRequest = 
         cleanBody === 'shubo' ||
         cleanBody.includes('ku shubo') ||
@@ -972,7 +972,7 @@ async function processIncomingMessage(from, messageId, type, messageText, mediaI
         userStates.set(`reg_${from}`, { step: 'awaiting_topup_consent' });
         await sendCloudMessage(
             from,
-            `💳 *Ku shubo lacag si aad u sii wadato hadalka.*\n\n` +
+            `ðŸ’³ *Ku shubo lacag si aad u sii wadato hadalka.*\n\n` +
             `Ma rabtaa inaan kuu bilaabo habka ku shubashada lacagta? (Ku jawaab: *Haa* ama *Maya*)`
         );
         return;
@@ -1010,7 +1010,7 @@ async function processIncomingMessage(from, messageId, type, messageText, mediaI
             );
         } else {
             const newCount = message_count + 1;
-            // Rate limit: 20 messages per 3-minute window → 30-min cooldown
+            // Rate limit: 20 messages per 3-minute window â†’ 30-min cooldown
             if (newCount > 20) {
                 // Lock for 30 minutes
                 const cooldownUntil = new Date(now.getTime() + 30 * 60000);
@@ -1028,7 +1028,7 @@ async function processIncomingMessage(from, messageId, type, messageText, mediaI
 
                 await sendCloudMessage(
                     from, 
-                    `⏳ Waxaad u diraysaa fariimo badan oo dhakhso ah. Fadlan yara sug ilaa ${formatTime}. Haddii aad degdegeyso, isticmaal app-ka si toos ah.`
+                    `â³ Waxaad u diraysaa fariimo badan oo dhakhso ah. Fadlan yara sug ilaa ${formatTime}. Haddii aad degdegeyso, isticmaal app-ka si toos ah.`
                 );
                 return;
             } else {
@@ -1060,7 +1060,7 @@ async function processIncomingMessage(from, messageId, type, messageText, mediaI
         if (!hasBalance) {
             await sendCloudMessage(
                 from,
-                `💳 *Dhibcahaagu way dhammaadeen (Dhegeysiga codku wuxuu rabaa 20 Credits).*\n\nFadlan ku shubo lacag si aan kuula sii hadlo oo aan kuugu caawiyo waxbarashadaada.\n\n*Ma kuugu shubaa lacagta?* (Ku jawaab: *Haa* ama *Maya*)`
+                `ðŸ’³ *Dhibcahaagu way dhammaadeen (Dhegeysiga codku wuxuu rabaa 20 Credits).*\n\nFadlan ku shubo lacag si aan kuula sii hadlo oo aan kuugu caawiyo waxbarashadaada.\n\n*Ma kuugu shubaa lacagta?* (Ku jawaab: *Haa* ama *Maya*)`
             );
             userStates.set(`reg_${from}`, { step: 'awaiting_topup_consent' });
             return;
@@ -1132,7 +1132,7 @@ async function processIncomingMessage(from, messageId, type, messageText, mediaI
         if (balance < cost) {
             await sendCloudMessage(
                 from,
-                `💳 *Dhibcahaagu way dhammaadeen.*\n\nFadlan ku shubo lacag si aan kuula sii hadlo oo aan kuugu caawiyo waxbarashadaada.\n\n*Ma kuugu shubaa lacagta?* (Ku jawaab: *Haa* ama *Maya*)`
+                `ðŸ’³ *Dhibcahaagu way dhammaadeen.*\n\nFadlan ku shubo lacag si aan kuula sii hadlo oo aan kuugu caawiyo waxbarashadaada.\n\n*Ma kuugu shubaa lacagta?* (Ku jawaab: *Haa* ama *Maya*)`
             );
             userStates.set(`reg_${from}`, { step: 'awaiting_topup_consent' });
             return;
@@ -1177,11 +1177,11 @@ async function processIncomingMessage(from, messageId, type, messageText, mediaI
     }));
 
     // System Instructions
-    const darkpenSystemInstruction = `You are Darkpen, a highly intelligent and friendly AI assistant developed by ZinsonAI (owned by Hamze Mohamuud Ali Zinson).
+    const darkpenSystemInstruction = `You are Kaynab AI, a highly intelligent and friendly AI assistant developed by ZinsonAI (owned by Hamze Mohamuud Ali Zinson).
     
     Rules:
     1. IDENTITY & CAPABILITIES: 
-       - NEVER prepend any self-introduction banner (e.g. "Hello! Waxaan ahay Darkpen...") to your replies. Only mention your name or creator if the user explicitly asks "Who are you?", "Who made you?", "Cidaa ku samaysay?" or similar direct identity questions.
+       - NEVER prepend any self-introduction banner (e.g. "Hello! Waxaan ahay Kaynab AI...") to your replies. Only mention your name or creator if the user explicitly asks "Who are you?", "Who made you?", "Cidaa ku samaysay?" or similar direct identity questions.
        - If the user asks what you do, how you can help, your capabilities, or similar questions (e.g., "maxaad qabataa", "maxad iga caawin kartaa", "what can you do"): Explain your capabilities in a beautiful, structured Somali message with rich emojis. Highlight that you are excellent at education (waxbarashada), having studied over 10,000 curriculum books and resolved 50,000+ exams. At the end of the message, you MUST append: "Hadaad ubaahan tahay macluumaad dheeraad ah la xidhiidh managerkayga (+252637930329)" so that the manager's contact card can be sent to them.
     2. LANGUAGE CONSISTENCY:
        - You MUST respond in the EXACT same language that the user spoke to you (Somali when asked in Somali, English when asked in English, etc.).
@@ -1190,21 +1190,21 @@ async function processIncomingMessage(from, messageId, type, messageText, mediaI
        - When analyzing an image, you MUST carefully verify the details, double-check all calculations or question options, and perform a self-validation check to ensure your answer is completely correct. Do not rush or make assumptions.
        - If the image contains exam questions, identify the question TYPE first, then format as follows:
 
-        A) MCQ (Multiple Choice / doorasho): Use ULTRA-COMPACT summary only — do NOT write the question text. Just list: *1 = A, 2 = C, 3 = B, 4 = D* (one line or stacked, number = correct letter). Example:
+        A) MCQ (Multiple Choice / doorasho): Use ULTRA-COMPACT summary only â€” do NOT write the question text. Just list: *1 = A, 2 = C, 3 = B, 4 = D* (one line or stacked, number = correct letter). Example:
            *Jawaabaha:*
            1 = A
            2 = C
            3 = B
            4 = D
 
-        B) TRUE/FALSE (Run/Been / Saxan-Qaldaan): Use ULTRA-COMPACT summary only — do NOT write the question text. Just list: *1 = Run, 2 = Been, 3 = Run* (number = Run ama Been). Example:
+        B) TRUE/FALSE (Run/Been / Saxan-Qaldaan): Use ULTRA-COMPACT summary only â€” do NOT write the question text. Just list: *1 = Run, 2 = Been, 3 = Run* (number = Run ama Been). Example:
            *Jawaabaha:*
            1 = Run
            2 = Been
            3 = Run
            4 = Run
 
-        C) Open-ended / Descriptive / Math: For these ONLY, write each question in bold, then place the answer directly below it prefixed with "Jawaab: " (or "الجواب: " for Arabic, "Answer: " for English). Show brief step-by-step if math.
+        C) Open-ended / Descriptive / Math: For these ONLY, write each question in bold, then place the answer directly below it prefixed with "Jawaab: " (or "Ø§Ù„Ø¬ÙˆØ§Ø¨: " for Arabic, "Answer: " for English). Show brief step-by-step if math.
 
         - NEVER mix the formats. MCQ stays compact. True/False stays compact. Only open-ended gets full bold question + answer.
         - Always double-check every single answer before responding.
@@ -1215,21 +1215,21 @@ async function processIncomingMessage(from, messageId, type, messageText, mediaI
     6. SLANG & TYPOS: You must be highly intelligent and understanding of Somalised slang, abbreviations, typos, and casual text message shorthand. Even if the user's question is brief, fragmented, or difficult to understand, use context and intelligent prediction to understand their true intent and provide a helpful response.
     7. EDUCATIONAL & SCIENTIFIC ACCURACY: If the topic is educational, scientific, or mathematical, you must double-check your facts, formulas, and reasoning to ensure 100% accuracy and reliability. Do not provide incorrect information.
     8. Formatting: Highlight key terms using *Keyword* (bold) instead of markdown. Do not add spaces inside formatting symbols (e.g., use *bold* not * bold *).
-    9. Shaxan (Table): Marka aad xog shax ah soo bandhigayso (tusaale: liiska xanuunada oo kasta leh magac, sababta, qaabka iwm), isticmaal qaabkan cad oo WhatsApp-ku si fiican u soo bandhiyo — kaga fogaan markdown shaxanka (| col |). Tusaale:
+    9. Shaxan (Table): Marka aad xog shax ah soo bandhigayso (tusaale: liiska xanuunada oo kasta leh magac, sababta, qaabka iwm), isticmaal qaabkan cad oo WhatsApp-ku si fiican u soo bandhiyo â€” kaga fogaan markdown shaxanka (| col |). Tusaale:
     *1. Tuberculosis (TB)*
-    ━━━━━━━━━━━━━━━━━━━━━━
-    🔹 *Sababta:* Mycobacterium tuberculosis
-    🔹 *Qaabka:* Hawada (respiratory)
-    🔹 *Daaweynta:* Antibiotics 6 bilood
-    ━━━━━━━━━━━━━━━━━━━━━━
+    â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
+    ðŸ”¹ *Sababta:* Mycobacterium tuberculosis
+    ðŸ”¹ *Qaabka:* Hawada (respiratory)
+    ðŸ”¹ *Daaweynta:* Antibiotics 6 bilood
+    â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
     *2. Malaria*
-    ━━━━━━━━━━━━━━━━━━━━━━
-    🔹 *Sababta:* Plasmodium parasite
-    🔹 *Qaabka:* Kaneecada
-    🔹 *Daaweynta:* Antimalarial drugs
-    ━━━━━━━━━━━━━━━━━━━━━━
-    Isticmaal emoji ku habboon qolofta sida 🦠 caabuqa, 🧪 daawada, iwm si ay u muuqato fiican.
-    10. Pricing info: Pay as you go $0.5 (100 credits), Monthly Basic $3 (unlimited standard chat, 1000 credits), Monthly Premium $11 (unlimited chat + premium math/science/image support, 5000 credits). 🎉 QIIMO DHIMIS (ilaa 20/07/2027): Monthly Basic (Bille Basic) waxaa laga heli karaa $2 kaliya! (Fadlan marnaba ha sheegin inta credit ama xog kale ee qorshahan $2 ah ku jirta, kaliya sheeg inuu yahay Bille Basic / Monthly Basic oo qiimo dhimis ah oo lagu heli karo $2 kaliya). Payment: EVC Plus dial *771*637930329*amount# | ZAAD dial *220*637930329*amount# (same number 637930329) | eDahab dial *700*659119779*amount#. After sending, user types sender number here. Contact: WhatsApp +252637930329.
+    â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
+    ðŸ”¹ *Sababta:* Plasmodium parasite
+    ðŸ”¹ *Qaabka:* Kaneecada
+    ðŸ”¹ *Daaweynta:* Antimalarial drugs
+    â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
+    Isticmaal emoji ku habboon qolofta sida ðŸ¦  caabuqa, ðŸ§ª daawada, iwm si ay u muuqato fiican.
+    10. Pricing info: Pay as you go $0.5 (100 credits), Monthly Basic $3 (unlimited standard chat, 1000 credits), Monthly Premium $11 (unlimited chat + premium math/science/image support, 5000 credits). ðŸŽ‰ QIIMO DHIMIS (ilaa 20/07/2027): Monthly Basic (Bille Basic) waxaa laga heli karaa $2 kaliya! (Fadlan marnaba ha sheegin inta credit ama xog kale ee qorshahan $2 ah ku jirta, kaliya sheeg inuu yahay Bille Basic / Monthly Basic oo qiimo dhimis ah oo lagu heli karo $2 kaliya). Payment: EVC Plus dial *771*637930329*amount# | ZAAD dial *220*637930329*amount# (same number 637930329) | eDahab dial *700*659119779*amount#. After sending, user types sender number here. Contact: WhatsApp +252637930329.
     11. USER SATISFACTION: Your primary goal is to satisfy and persuade the user. Be helpful, warm, and accommodating. NEVER try to redirect the user away or respond in a way that frustrates them.
     12. PERSONALITY & HUMOR (KAFTAN): Be friendly, warm, and humorous. You can joke, tease, and play along with the user. If a user writes something rude, inappropriate, or sexual ("edeb darro"), reject it politely but with a lighthearted, playful, and teasing tone (kaftan diido ah), never being harsh or overly formal.`;
 
@@ -1248,11 +1248,11 @@ Haddii su'aaluhu yihiin Run/Been (True/False): si kooban u soo koobi kaliya: "1 
 Haddii su'aaluhu yihiin buuxbuuxin (fill-in-the-blank / meelaha banaan ee lagu buuxin lahaa): dib u qor jumladda oo dhan laakiin meeshii bannaanka ahayd ku qor jawaabta saxda ah oo aad uga dhigtay *jawaabta* (bold). Tusaale: "Soomaaliya waxay xorriyaddeeda qaadatay *1 July 1960*". Ha isticmaalin jadwal.
 
 Haddii su'aaluhu yihiin isku-beegbeeg (matching / Column A matches Column B): u soo bandhig si kooban oo qurxoon sidan:
-1. [term] → [matching answer]
-2. [term] → [matching answer]
-(isticmaal → symbol si uu u muuqdo fiican WhatsApp-ka)
+1. [term] â†’ [matching answer]
+2. [term] â†’ [matching answer]
+(isticmaal â†’ symbol si uu u muuqdo fiican WhatsApp-ka)
 
-Haddii su'aaluhu yihiin furan (open-ended) ama xisaab: su'aal kasta ku soo qaado adigoo bold ka dhigaya, jawaabtana hoos dhig adigoo ka horreysiinaya "Jawaab: " (ama "الجواب: " haddii ay Carabi tahay).
+Haddii su'aaluhu yihiin furan (open-ended) ama xisaab: su'aal kasta ku soo qaado adigoo bold ka dhigaya, jawaabtana hoos dhig adigoo ka horreysiinaya "Jawaab: " (ama "Ø§Ù„Ø¬ÙˆØ§Ø¨: " haddii ay Carabi tahay).
 
 Ku jawaab luuqadda qoraalka sawirka ku dhex jira.`;
     } else if (attachmentData && hasCaption) {
@@ -1285,7 +1285,7 @@ Ku jawaab luuqadda qoraalka sawirka ku dhex jira.`;
         // Format response to replace HTML-style tags with WhatsApp-supported bold and emojis
         let formattedResponse = formatResponseForWhatsApp(aiResponse);
         if (isRunningOut) {
-            formattedResponse += "\n\n⚠️ *Lacagtaadii wey kaa sii dhamaanaysaa ee ku shubo lacag.*";
+            formattedResponse += "\n\nâš ï¸ *Lacagtaadii wey kaa sii dhamaanaysaa ee ku shubo lacag.*";
         }
 
         // Send response via WhatsApp Cloud API
@@ -1316,13 +1316,13 @@ Ku jawaab luuqadda qoraalka sawirka ku dhex jira.`;
 
         // Emoji reaction (40% chance)
         if (Math.random() < 0.4) {
-            const reactions = ['👍', '❤️', '😂', '😮', '😢'];
-            let chosenReaction = reactions[0]; // default '👍'
+            const reactions = ['ðŸ‘', 'â¤ï¸', 'ðŸ˜‚', 'ðŸ˜®', 'ðŸ˜¢'];
+            let chosenReaction = reactions[0]; // default 'ðŸ‘'
             const lowerPrompt = finalPrompt.toLowerCase();
             if (lowerPrompt.includes('dhib') || lowerPrompt.includes('xun') || lowerPrompt.includes('buux') || lowerPrompt.includes('tiiraanyo')) {
-                chosenReaction = '😢';
+                chosenReaction = 'ðŸ˜¢';
             } else if (lowerPrompt.includes('ha') || lowerPrompt.includes('qosol') || lowerPrompt.includes('kaftan') || lowerPrompt.includes('he')) {
-                chosenReaction = '😂';
+                chosenReaction = 'ðŸ˜‚';
             }
             await sendCloudReaction(from, messageId, chosenReaction).catch(() => {});
         }
@@ -1354,7 +1354,7 @@ Ku jawaab luuqadda qoraalka sawirka ku dhex jira.`;
     } catch (err) {
         console.error('[WHATSAPP CLOUD] Gemini generation error:', err);
         await sendCloudReaction(from, messageId, '').catch(() => {});
-        await sendCloudMessage(from, 'Waan ka xunnahay, Darkpen waxaa ku yimid cilad farsamo oo ku meel gaadh ah. Si aan hawshaadu u xanibmin, fadlan nagala hadal Telegram-ka: t.me/darkpenBot ama toos ula xidhiidh Maamulaha: +252637930329.');
+        await sendCloudMessage(from, 'Waan ka xunnahay, Kaynab AI waxaa ku yimid cilad farsamo oo ku meel gaadh ah. Si aan hawshaadu u xanibmin, fadlan nagala hadal Telegram-ka: t.me/darkpenBot ama toos ula xidhiidh Maamulaha: +252637930329.');
     }
 }
 
@@ -1379,7 +1379,7 @@ function formatResponseForWhatsApp(text) {
         if (lines.length === 0) return '';
         const headers = lines[0].split('|').map(h => h.trim());
         const rows = lines.slice(1).map(line => line.split('|').map(c => c.trim()));
-        const divider = '━━━━━━━━━━━━━━━━━━━━━━';
+        const divider = 'â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”';
         let output = '';
         rows.forEach((row, rowIdx) => {
             output += `\n*${rowIdx + 1}.* `;
@@ -1387,7 +1387,7 @@ function formatResponseForWhatsApp(text) {
             output += `*${firstVal}*\n${divider}\n`;
             row.slice(1).forEach((col, idx) => {
                 const header = headers[idx + 1] || '';
-                if (col) output += `🔹 *${header}:* ${col}\n`;
+                if (col) output += `ðŸ”¹ *${header}:* ${col}\n`;
             });
             output += `${divider}\n`;
         });
@@ -1403,14 +1403,14 @@ function formatResponseForWhatsApp(text) {
         const headers = dataLines[0].split('|').map(h => h.trim()).filter(Boolean);
         const rows = dataLines.slice(1).map(l => l.split('|').map(c => c.trim()).filter(Boolean));
         if (rows.length === 0) return tableBlock;
-        const divider = '━━━━━━━━━━━━━━━━━━━━━━';
+        const divider = 'â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”';
         let output = '\n';
         rows.forEach((row, rowIdx) => {
             const title = row[0] || `Item ${rowIdx + 1}`;
             output += `*${rowIdx + 1}. ${title}*\n${divider}\n`;
             row.slice(1).forEach((col, idx) => {
                 const header = headers[idx + 1] || '';
-                if (col) output += `🔹 *${header}:* ${col}\n`;
+                if (col) output += `ðŸ”¹ *${header}:* ${col}\n`;
             });
             output += `${divider}\n\n`;
         });
@@ -1420,9 +1420,9 @@ function formatResponseForWhatsApp(text) {
     // 1. Convert markdown headers (# Title, ## Title, etc.) to WhatsApp bold titles
     formatted = formatted.replace(/^(#{1,6})\s+(.+)$/gm, '*$2*');
 
-    // 2. Convert markdown list items (* item or - item) to bullet points (• item)
+    // 2. Convert markdown list items (* item or - item) to bullet points (â€¢ item)
     // This must be done BEFORE resolving bold tags to avoid messing up lists.
-    formatted = formatted.replace(/^\s*[\*\-]\s+/gm, '• ');
+    formatted = formatted.replace(/^\s*[\*\-]\s+/gm, 'â€¢ ');
 
     // 3. Clean up triple stars (bold-italic in markdown) -> *_text_* (bold italic in WhatsApp)
     formatted = formatted.replace(/\*\*\*+\s*([^\*]+?)\s*\*\*\*+/g, '*_$1_*');
