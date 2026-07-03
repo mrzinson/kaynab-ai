@@ -210,6 +210,22 @@ export default function ChatView({ onOpenLeftSidebar, onOpenNavPanel }: ChatView
         setMessages(Array.isArray(parsed) && parsed.length > 0 ? parsed : [welcome]);
       } catch { setMessages([welcome]); }
     } else { setMessages([welcome]); }
+
+    // Fetch actual credits
+    const token = localStorage.getItem('userToken');
+    if (token) {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://kaynab-ai-backend.onrender.com';
+      fetch(`${apiUrl}/api/user/profile`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.user && data.user.balance !== undefined) {
+          setCredits(data.user.balance);
+        }
+      })
+      .catch(() => {});
+    }
   }, []);
 
   const handleDocumentSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -229,8 +245,20 @@ export default function ChatView({ onOpenLeftSidebar, onOpenNavPanel }: ChatView
   };
 
   const fetchCredits = () => {
-    // Simulated credit sync
-    setCredits(prev => (prev !== null ? prev - 1 : 99));
+    const token = localStorage.getItem('userToken');
+    if (token) {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://kaynab-ai-backend.onrender.com';
+      fetch(`${apiUrl}/api/user/profile`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.user && data.user.balance !== undefined) {
+          setCredits(data.user.balance);
+        }
+      })
+      .catch(() => {});
+    }
   };
 
   /* ── send message ── */
@@ -266,32 +294,108 @@ export default function ChatView({ onOpenLeftSidebar, onOpenNavPanel }: ChatView
     setThinkingStatus('Researching the web…');
 
     const token = localStorage.getItem('userToken');
-    const sendReq = (retry = false) => {
-      // Mock / actual stream router
-      let acc = '';
-      let steps = ['Searching the web...', 'Analyzing results...', 'Synthesizing response...'];
-      let stepIdx = 0;
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://kaynab-ai-backend.onrender.com';
 
-      const interval = setInterval(() => {
-        if (stepIdx < steps.length) {
-          setThinkingStatus(steps[stepIdx++]);
-        } else {
-          clearInterval(interval);
-          acc = getMockAiResponse(userText, focusMode, curAttach);
-          setMessages(prev => prev.map(m => m.id === aiMsgId ? {
-            ...m, text: acc, status: 'complete'
-          } : m));
-          setIsAiTyping(false);
-          fetchCredits();
+    try {
+      const response = await fetch(`${apiUrl}/api/chat/ask`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token || ''}`
+        },
+        body: JSON.stringify({
+          message: userText,
+          sessionId: sessionId || null,
+          stream: true,
+          chatType: 'private',
+          attachment: curAttach.length ? {
+            name: curAttach[0].name,
+            mimeType: curAttach[0].mimeType,
+            base64: curAttach[0].base64
+          } : null
+        })
+      });
 
-          // Persist
-          let uId = 'guest';
-          try { const u = JSON.parse(localStorage.getItem('userData') || '{}'); if (u.id) uId = String(u.id); } catch {}
-          setMessages(cur => { localStorage.setItem(`education_chat_messages_${uId}`, JSON.stringify(cur)); return cur; });
+      if (!response.ok) {
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.message || 'Gelitaanka wuu fashilmay ama credits kuuma filna.');
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error('Response stream unavailable');
+      }
+
+      const decoder = new TextDecoder();
+      let buffer = '';
+      let aiText = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          const cleanLine = line.trim();
+          if (!cleanLine) continue;
+
+          if (cleanLine.startsWith('data: ')) {
+            const dataStr = cleanLine.slice(6);
+            if (dataStr === '[DONE]') {
+              continue;
+            }
+
+            try {
+              const data = JSON.parse(dataStr);
+              if (data.error) {
+                throw new Error(data.error);
+              }
+              if (data.status) {
+                if (data.status === 'thinking') {
+                  setThinkingStatus('Analyzing results...');
+                } else if (data.status === 'searching') {
+                  setThinkingStatus('Searching the web...');
+                }
+              }
+              if (data.text) {
+                aiText += data.text;
+                setMessages(prev => prev.map(m => m.id === aiMsgId ? {
+                  ...m,
+                  text: aiText,
+                  status: 'complete'
+                } : m));
+              }
+            } catch (e) {
+              // Ignore partial JSON parse errors
+            }
+          }
         }
-      }, 1000);
-    };
-    sendReq();
+      }
+
+      // Complete the typing
+      setMessages(prev => prev.map(m => m.id === aiMsgId ? {
+        ...m,
+        status: 'complete'
+      } : m));
+      setIsAiTyping(false);
+      fetchCredits();
+
+      // Persist
+      let uId = 'guest';
+      try { const u = JSON.parse(localStorage.getItem('userData') || '{}'); if (u.id) uId = String(u.id); } catch {}
+      setMessages(cur => { localStorage.setItem(`education_chat_messages_${uId}`, JSON.stringify(cur)); return cur; });
+
+    } catch (err: any) {
+      setMessages(prev => prev.map(m => m.id === aiMsgId ? {
+        ...m,
+        text: err.message || 'Cilad ayaa dhacday. Fadlan mar kale isku day ama ku shubo credits.',
+        status: 'complete'
+      } : m));
+      setIsAiTyping(false);
+    }
   };
 
   const userMsgText = (txt: string, atts: any[]) => {
