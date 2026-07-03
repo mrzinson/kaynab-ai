@@ -29,7 +29,7 @@ export default function ExamsView({ onOpenPdf, onOpenSidebar }: ExamsViewProps) 
     const fetchExams = async () => {
       const token = localStorage.getItem('userToken');
       try {
-        const res = await fetch('https://darkpen-backend.onrender.com/api/user/exams', {
+        const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'https://kaynab-ai-backend.onrender.com') + '/api/user/exams', {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = await res.json();

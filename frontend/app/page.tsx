@@ -93,7 +93,7 @@ export default function AppWorkspace() {
 
     const token = localStorage.getItem('userToken');
     if (token) {
-      fetch('https://darkpen-backend.onrender.com/api/user/profile', { headers: { Authorization: `Bearer ${token}` } })
+      fetch((process.env.NEXT_PUBLIC_API_URL || 'https://kaynab-ai-backend.onrender.com') + '/api/user/profile', { headers: { Authorization: `Bearer ${token}` } })
         .then(res => {
           if (res.ok) return res.json();
           if (res.status === 401) {

@@ -31,7 +31,7 @@ export default function ProfileView({ userData, onUpdateUser, onClose }: Profile
 
     try {
       const token = localStorage.getItem('userToken');
-      const res = await fetch('https://darkpen-backend.onrender.com/api/user/profile', {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'https://kaynab-ai-backend.onrender.com') + '/api/user/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

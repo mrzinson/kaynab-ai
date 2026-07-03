@@ -33,7 +33,7 @@ export default function QuizView({ onOpenSidebar, onBack }: QuizViewProps) {
   const fetchQuizStatus = async () => {
     const token = localStorage.getItem('userToken');
     try {
-      const res = await fetch('https://darkpen-backend.onrender.com/api/chat/quiz/status', {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'https://kaynab-ai-backend.onrender.com') + '/api/chat/quiz/status', {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -57,7 +57,7 @@ export default function QuizView({ onOpenSidebar, onBack }: QuizViewProps) {
   const fetchLeaderboard = async () => {
     const token = localStorage.getItem('userToken');
     try {
-      const res = await fetch('https://darkpen-backend.onrender.com/api/chat/quiz/leaderboard', {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'https://kaynab-ai-backend.onrender.com') + '/api/chat/quiz/leaderboard', {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -73,7 +73,7 @@ export default function QuizView({ onOpenSidebar, onBack }: QuizViewProps) {
     setOptInLoading(true);
     const token = localStorage.getItem('userToken');
     try {
-      const res = await fetch('https://darkpen-backend.onrender.com/api/chat/quiz/opt-in', {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'https://kaynab-ai-backend.onrender.com') + '/api/chat/quiz/opt-in', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -96,7 +96,7 @@ export default function QuizView({ onOpenSidebar, onBack }: QuizViewProps) {
     setQuizError('');
     const token = localStorage.getItem('userToken');
     try {
-      const res = await fetch('https://darkpen-backend.onrender.com/api/chat/quiz/generate', {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'https://kaynab-ai-backend.onrender.com') + '/api/chat/quiz/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -139,7 +139,7 @@ export default function QuizView({ onOpenSidebar, onBack }: QuizViewProps) {
         selected_option: userAnswers[idx]
       }));
 
-      const res = await fetch('https://darkpen-backend.onrender.com/api/chat/quiz/submit', {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'https://kaynab-ai-backend.onrender.com') + '/api/chat/quiz/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

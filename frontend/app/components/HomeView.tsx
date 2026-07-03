@@ -79,7 +79,7 @@ export default function HomeView({ userData, onSelectTab, onOpenPdf }: HomeViewP
       
       // Promo cards
       try {
-        const res = await fetch('https://darkpen-backend.onrender.com/api/user/promo-cards', {
+        const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'https://kaynab-ai-backend.onrender.com') + '/api/user/promo-cards', {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = await res.json();
@@ -90,7 +90,7 @@ export default function HomeView({ userData, onSelectTab, onOpenPdf }: HomeViewP
 
       // Books
       try {
-        const res = await fetch('https://darkpen-backend.onrender.com/api/user/books', {
+        const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'https://kaynab-ai-backend.onrender.com') + '/api/user/books', {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = await res.json();
@@ -103,7 +103,7 @@ export default function HomeView({ userData, onSelectTab, onOpenPdf }: HomeViewP
 
       // Exams
       try {
-        const res = await fetch('https://darkpen-backend.onrender.com/api/user/exams', {
+        const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'https://kaynab-ai-backend.onrender.com') + '/api/user/exams', {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = await res.json();

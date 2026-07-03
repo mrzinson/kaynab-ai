@@ -69,7 +69,7 @@ export default function GroupsView({ onClose }: GroupsViewProps) {
     fetchGroups();
 
     // Listen to real-time notification socket
-    const socket = io('https://darkpen-backend.onrender.com', { transports: ['websocket'] });
+    const socket = io((process.env.NEXT_PUBLIC_API_URL || 'https://kaynab-ai-backend.onrender.com') + '', { transports: ['websocket'] });
     socket.on('receive_message', () => {
       fetchGroups(false);
     });
@@ -155,7 +155,7 @@ export default function GroupsView({ onClose }: GroupsViewProps) {
     fetchCredits();
 
     // Establish WebSocket Connection
-    const socket = io('https://darkpen-backend.onrender.com', { transports: ['websocket'] });
+    const socket = io((process.env.NEXT_PUBLIC_API_URL || 'https://kaynab-ai-backend.onrender.com') + '', { transports: ['websocket'] });
     socketRef.current = socket;
     socket.emit('join_room', `group_${group.id}`);
     socket.on('receive_message', (data: any) => {

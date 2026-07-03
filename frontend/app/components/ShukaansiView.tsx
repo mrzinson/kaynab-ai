@@ -128,7 +128,7 @@ export default function ShukaansiView({ onOpenSidebar, onBack }: ShukaansiViewPr
     const token = localStorage.getItem('userToken');
     if (!token) return;
     try {
-      const res = await fetch('https://darkpen-backend.onrender.com/api/chat/shukaansi-profile', {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || 'https://kaynab-ai-backend.onrender.com') + '/api/chat/shukaansi-profile', {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -251,7 +251,7 @@ export default function ShukaansiView({ onOpenSidebar, onBack }: ShukaansiViewPr
     let uId = 'guest';
     try { const u = JSON.parse(localStorage.getItem('userData') || '{}'); if (u.id) uId = String(u.id); } catch {}
     try {
-      await fetch('https://darkpen-backend.onrender.com/api/chat/history/clear', {
+      await fetch((process.env.NEXT_PUBLIC_API_URL || 'https://kaynab-ai-backend.onrender.com') + '/api/chat/history/clear', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify({ chatType: 'shukaansi' }),
