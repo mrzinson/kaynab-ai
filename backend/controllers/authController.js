@@ -122,15 +122,26 @@ async function generateUniqueUsername(connection, name) {
 exports.signup = async (req, res) => {
     try {
         const name = String(req.body.name || '').trim();
-        const whatsappNumber = normalizePhoneNumber(req.body.whatsapp_number || req.body.phone);
+        const username = normalizeUsername(req.body.username);
+        const email = String(req.body.email || '').trim().toLowerCase();
         const { password } = req.body;
+        
+        let whatsappNumber = null;
+        if (req.body.whatsapp_number || req.body.phone) {
+            whatsappNumber = normalizePhoneNumber(req.body.whatsapp_number || req.body.phone);
+        }
 
         if (!name) {
             return res.status(400).json({ message: 'Magaca waa waajib.' });
         }
 
-        if (!whatsappNumber) {
-            return res.status(400).json({ message: 'Fadlan geli number sax ah, tusaale +25263XXXXXXX.' });
+        const usernameError = validateUsername(username);
+        if (usernameError) {
+            return res.status(400).json({ message: usernameError });
+        }
+
+        if (!email || !EMAIL_REGEX.test(email)) {
+            return res.status(400).json({ message: 'Fadlan geli email sax ah.' });
         }
 
         const passwordError = validatePassword(password);
@@ -144,24 +155,44 @@ exports.signup = async (req, res) => {
         try {
             await connection.beginTransaction();
 
-            const [existingByPhone] = await connection.execute(
-                'SELECT id FROM users WHERE whatsapp_number = ?',
-                [whatsappNumber]
+            // Check if username already exists
+            const [existingByUsername] = await connection.execute(
+                'SELECT id FROM users WHERE username = ?',
+                [username]
             );
-            if (existingByPhone.length > 0) {
+            if (existingByUsername.length > 0) {
                 await connection.rollback();
-                return res.status(400).json({ message: 'Number-kan hore ayaa loo diiwaangeliyay.' });
+                return res.status(400).json({ message: 'Username-kan horey ayaa loo qaatay. Fadlan dooro mid kale.' });
             }
 
-            // Auto-generate unique username
-            const username = await generateUniqueUsername(connection, name);
+            // Check if email already exists
+            const [existingByEmail] = await connection.execute(
+                'SELECT id FROM users WHERE email = ?',
+                [email]
+            );
+            if (existingByEmail.length > 0) {
+                await connection.rollback();
+                return res.status(400).json({ message: 'Email-kan horey ayaa loo diiwaangeliyay.' });
+            }
+
+            // Check if WhatsApp number already exists (if provided)
+            if (whatsappNumber) {
+                const [existingByPhone] = await connection.execute(
+                    'SELECT id FROM users WHERE whatsapp_number = ?',
+                    [whatsappNumber]
+                );
+                if (existingByPhone.length > 0) {
+                    await connection.rollback();
+                    return res.status(400).json({ message: 'WhatsApp number-kan horey ayaa loo diiwaangeliyay.' });
+                }
+            }
 
             const hashedPassword = await bcrypt.hash(password, 12);
 
             const [result] = await connection.execute(
                 `INSERT INTO users (name, username, email, whatsapp_number, password, payment_status, payment_reference, is_verified)
-                 VALUES (?, ?, NULL, ?, ?, NULL, NULL, TRUE)`,
-                [name, username, whatsappNumber, hashedPassword]
+                 VALUES (?, ?, ?, ?, ?, NULL, NULL, TRUE)`,
+                [name, username, email, whatsappNumber, hashedPassword]
             );
 
             const newUserId = result.insertId;
@@ -195,35 +226,38 @@ exports.signup = async (req, res) => {
 // 2. Gelitaanka (Login)
 exports.login = async (req, res) => {
     try {
-        const identifier = String(req.body.whatsapp_number || req.body.phone || req.body.email || '').trim();
-        const normalizedPhone = normalizePhoneNumber(identifier);
+        const identifier = String(req.body.identifier || req.body.whatsapp_number || req.body.phone || req.body.email || '').trim();
         const { password } = req.body;
 
         if (!identifier || !password) {
-            return res.status(400).json({ message: 'Fadlan geli number-ka iyo password-ka.' });
+            return res.status(400).json({ message: 'Fadlan geli (Email/Username/WhatsApp) iyo Password-ka.' });
         }
 
-        let users;
-        if (normalizedPhone) {
-            [users] = await db.execute('SELECT * FROM users WHERE whatsapp_number = ?', [normalizedPhone]);
-        } else {
-            const email = normalizeOptionalEmail(identifier);
-            [users] = await db.execute('SELECT * FROM users WHERE email = ?', [email]);
-        }
+        const normalizedPhone = normalizePhoneNumber(identifier);
+
+        // Flexible search matching email, username, or whatsapp number
+        const [users] = await db.execute(
+            `SELECT * FROM users 
+             WHERE email = ? 
+                OR username = ? 
+                OR whatsapp_number = ? 
+                OR (whatsapp_number IS NOT NULL AND whatsapp_number = ?)` ,
+            [identifier.toLowerCase(), identifier.toLowerCase(), identifier, normalizedPhone || '']
+        );
 
         if (users.length === 0) {
-            return res.status(400).json({ message: authErrorMessage() });
+            return res.status(400).json({ message: 'Email/Username/Number ama Password-ka ayaa qaldan.' });
         }
 
         const user = users[0];
         if (user.is_suspended) {
-            return res.status(403).json({ message: 'Koontadaada waa la laalay (Suspended). Tafasiil dheeri ah la xiriir maamulka. whatsapp: 637930329' });
+            return res.status(403).json({ message: 'Koontadaada waa la laalay (Suspended). Fadlan la xiriir maamulka.' });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         
         if (!isMatch) {
-            return res.status(400).json({ message: authErrorMessage() });
+            return res.status(400).json({ message: 'Email/Username/Number ama Password-ka ayaa qaldan.' });
         }
 
         const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '30d' });

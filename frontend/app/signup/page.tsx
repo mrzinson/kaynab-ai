@@ -15,13 +15,17 @@ export default function SignUpScreen() {
       router.replace('/');
     }
   }, [router]);
-
   const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [whatsappNumber, setWhatsappNumber] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  
   const [nameFocused, setNameFocused] = useState(false);
+  const [usernameFocused, setUsernameFocused] = useState(false);
+  const [emailFocused, setEmailFocused] = useState(false);
   const [phoneFocused, setPhoneFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -48,6 +52,7 @@ export default function SignUpScreen() {
   ];
 
   const normalizePhone = (code: string, num: string) => {
+    if (!num.trim()) return '';
     let cleanNum = num.replace(/\D/g, ''); // strip non-digits
     if (cleanNum.startsWith('0')) {
       cleanNum = cleanNum.slice(1);
@@ -63,11 +68,21 @@ export default function SignUpScreen() {
     e.preventDefault();
     setErrorMsg('');
 
-    const fullNumber = normalizePhone(countryCode, whatsappNumber);
-    if (!name.trim() || !whatsappNumber.trim() || !password) {
-      setErrorMsg('Fadlan buuxi magaca, number-ka iyo password-ka');
+    if (!name.trim() || !username.trim() || !email.trim() || !password) {
+      setErrorMsg('Fadlan buuxi magaca, username-ka, email-ka iyo password-ka');
       return;
     }
+
+    if (!/^[a-z0-9_]{3,30}$/.test(username.trim().toLowerCase())) {
+      setErrorMsg('Username-ku waa inuu ahaadaa 3-30 xaraf (xuruuf, tiro, iyo _ oo kaliya)');
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setErrorMsg('Fadlan geli email sax ah');
+      return;
+    }
+
     if (password.length < 8) {
       setErrorMsg('Password-ku waa inuu ahaadaa ugu yaraan 8 xaraf');
       return;
@@ -76,11 +91,15 @@ export default function SignUpScreen() {
     setLoading(true);
 
     try {
-      const response = await fetch(`https://darkpen-backend.onrender.com/api/auth/signup`, {
+      const fullNumber = whatsappNumber.trim() ? normalizePhone(countryCode, whatsappNumber) : null;
+      
+      const response = await fetch((process.env.NEXT_PUBLIC_API_URL || 'https://kaynab-ai-backend.onrender.com') + '/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: name.trim(),
+          username: username.trim().toLowerCase(),
+          email: email.trim().toLowerCase(),
           whatsapp_number: fullNumber,
           password: password,
         }),
@@ -95,14 +114,13 @@ export default function SignUpScreen() {
       localStorage.setItem('userToken', data.token);
       localStorage.setItem('userData', JSON.stringify(data.user));
 
-      router.push('/'); // Will handle terms & onboarding inline on main page
+      router.push('/');
     } catch (err: any) {
       setErrorMsg(err.message || 'Cilad ayaa dhacday');
     } finally {
       setLoading(false);
     }
   };
-
   return (
     <div className="min-h-screen w-full flex flex-col justify-center items-center p-4 sm:p-6 bg-[#0D1117] transition-colors duration-300">
       <div className="w-full max-w-[390px] flex flex-col gap-6">
@@ -112,21 +130,11 @@ export default function SignUpScreen() {
           
           {/* Logo & Title */}
           <div className="flex flex-col items-center mb-6">
-            <div className="w-16 h-16 relative mb-4">
-              <Image 
-                src="/darkpen-logo-blue.png" 
-                alt="Darkpen Logo" 
-                fill
-                priority
-                sizes="64px"
-                className="object-contain"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=100';
-                }}
-              />
+            <div className="w-16 h-16 relative mb-4 bg-blue-500/10 border border-blue-500/20 rounded-2xl flex items-center justify-center font-black text-2xl text-blue-500">
+              KB
             </div>
             <h1 className="text-3xl font-extrabold text-blue-500 tracking-wider uppercase">SIGNUP</h1>
+            <p className="text-xs text-gray-400 mt-1">Join Kaynab AI global research workspace</p>
           </div>
 
           <form onSubmit={handleSignup} className="w-full flex flex-col gap-4">
@@ -137,27 +145,61 @@ export default function SignUpScreen() {
               <div className={`flex items-center border-2 rounded-xl overflow-hidden bg-gray-50 dark:bg-[#0D1117] transition-all duration-200 ${nameFocused ? 'border-blue-500 ring-2 ring-blue-500/20' : 'border-gray-200 dark:border-gray-800'}`}>
                 <input
                   type="text"
-                  placeholder="Magacaaga oo buuxa"
+                  placeholder="Geli magacaaga"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   onFocus={() => setNameFocused(true)}
                   onBlur={() => setNameFocused(false)}
-                  className="flex-1 px-4 py-3.5 bg-transparent text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none text-base"
+                  className="flex-1 px-4 py-3 bg-transparent text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none text-sm"
                   required
                 />
               </div>
             </div>
 
-            {/* WhatsApp Number Field */}
+            {/* Username Field */}
             <div className="flex flex-col gap-1.5 w-full">
-              <label className="text-xs font-semibold text-blue-500 ml-1">WhatsApp Number</label>
+              <label className="text-xs font-semibold text-blue-500 ml-1">Username</label>
+              <div className={`flex items-center border-2 rounded-xl overflow-hidden bg-gray-50 dark:bg-[#0D1117] transition-all duration-200 ${usernameFocused ? 'border-blue-500 ring-2 ring-blue-500/20' : 'border-gray-200 dark:border-gray-800'}`}>
+                <input
+                  type="text"
+                  placeholder="Tusaale: ahmed_10"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  onFocus={() => setUsernameFocused(true)}
+                  onBlur={() => setUsernameFocused(false)}
+                  className="flex-1 px-4 py-3 bg-transparent text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none text-sm"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Email Field */}
+            <div className="flex flex-col gap-1.5 w-full">
+              <label className="text-xs font-semibold text-blue-500 ml-1">Email Address</label>
+              <div className={`flex items-center border-2 rounded-xl overflow-hidden bg-gray-50 dark:bg-[#0D1117] transition-all duration-200 ${emailFocused ? 'border-blue-500 ring-2 ring-blue-500/20' : 'border-gray-200 dark:border-gray-800'}`}>
+                <input
+                  type="email"
+                  placeholder="Tusaale: user@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onFocus={() => setEmailFocused(true)}
+                  onBlur={() => setEmailFocused(false)}
+                  className="flex-1 px-4 py-3 bg-transparent text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none text-sm"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* WhatsApp Number Field (Optional) */}
+            <div className="flex flex-col gap-1.5 w-full">
+              <label className="text-xs font-semibold text-blue-500 ml-1">WhatsApp Number (Optional)</label>
               <div className={`flex items-center border-2 rounded-xl overflow-hidden bg-gray-50 dark:bg-[#0D1117] transition-all duration-200 ${phoneFocused ? 'border-blue-500 ring-2 ring-blue-500/20' : 'border-gray-200 dark:border-gray-800'}`}>
                 
                 {/* Country Code Picker */}
                 <button
                   type="button"
                   onClick={() => setModalVisible(true)}
-                  className="flex items-center gap-1.5 px-3 py-3.5 bg-gray-100 dark:bg-gray-855 border-r border-gray-200 dark:border-gray-800 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
+                  className="flex items-center gap-1.5 px-3 py-3 bg-gray-100 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-800 text-xs font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
                 >
                   <span>{countryFlag} {countryCode}</span>
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3 h-3 text-gray-500">
@@ -172,8 +214,7 @@ export default function SignUpScreen() {
                   onChange={(e) => setWhatsappNumber(e.target.value)}
                   onFocus={() => setPhoneFocused(true)}
                   onBlur={() => setPhoneFocused(false)}
-                  className="flex-1 px-4 py-3 bg-transparent text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none text-base"
-                  required
+                  className="flex-1 px-4 py-3 bg-transparent text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none text-sm"
                 />
               </div>
             </div>
@@ -184,12 +225,12 @@ export default function SignUpScreen() {
               <div className={`flex items-center border-2 rounded-xl overflow-hidden bg-gray-50 dark:bg-[#0D1117] transition-all duration-200 ${passwordFocused ? 'border-blue-500 ring-2 ring-blue-500/20' : 'border-gray-200 dark:border-gray-800'}`}>
                 <input
                   type={showPassword ? "text" : "password"}
-                  placeholder="Ahaada ugu yaraan 8 xaraf"
+                  placeholder="Ugu yaraan 8 xaraf"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   onFocus={() => setPasswordFocused(true)}
                   onBlur={() => setPasswordFocused(false)}
-                  className="flex-1 px-4 py-3.5 bg-transparent text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none text-base"
+                  className="flex-1 px-4 py-3 bg-transparent text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none text-sm"
                   required
                 />
                 

@@ -15,94 +15,49 @@ export default function LoginScreen() {
       router.replace('/');
     }
   }, [router]);
-
-  const [whatsappNumber, setWhatsappNumber] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState('Fadlan geli WhatsApp number-ka iyo password-ka');
-  const [phoneFocused, setPhoneFocused] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
+  
+  const [identifierFocused, setIdentifierFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
-  // Country Code Dropdown
-  const [countryCode, setCountryCode] = useState('+252');
-  const [countryFlag, setCountryFlag] = useState('🇸🇴');
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const COUNTRIES = [
-    { code: '+252', name: 'Somalia', flag: '🇸🇴' },
-    { code: '+254', name: 'Kenya', flag: '🇰🇪' },
-    { code: '+251', name: 'Ethiopia', flag: '🇪🇹' },
-    { code: '+253', name: 'Djibouti', flag: '🇩🇯' },
-    { code: '+256', name: 'Uganda', flag: '🇺🇬' },
-    { code: '+44', name: 'United Kingdom', flag: '🇬🇧' },
-    { code: '+1', name: 'United States/Canada', flag: '🇺🇸' },
-    { code: '+90', name: 'Turkey', flag: '🇹🇷' },
-    { code: '+966', name: 'Saudi Arabia', flag: '🇸🇦' },
-    { code: '+971', name: 'United Arab Emirates', flag: '🇦🇪' },
-    { code: '+46', name: 'Sweden', flag: '🇸🇪' },
-    { code: '+47', name: 'Norway', flag: '🇳🇴' },
-    { code: '+358', name: 'Finland', flag: '🇫🇮' }
-  ];
-
-  // Helper function to combine & normalize phone
-  const normalizePhone = (code: string, num: string) => {
-    let cleanNum = num.replace(/\D/g, ''); // strip non-digits
-    if (cleanNum.startsWith('0')) {
-      cleanNum = cleanNum.slice(1);
-    }
-    // Remove leading code if user entered it again
-    const codeDigits = code.replace(/\D/g, '');
-    if (cleanNum.startsWith(codeDigits)) {
-      cleanNum = cleanNum.slice(codeDigits.length);
-    }
-    return `${code}${cleanNum}`;
-  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
 
-    const fullNumber = normalizePhone(countryCode, whatsappNumber);
-    if (!whatsappNumber.trim() || !password) {
-      setErrorMsg('Fadlan geli number sax ah iyo password-ka');
+    if (!identifier.trim() || !password) {
+      setErrorMsg('Fadlan geli (Email/Username/WhatsApp number) iyo password-ka');
       return;
     }
 
     setLoading(true);
 
     try {
-      const response = await fetch(`https://darkpen-backend.onrender.com/api/auth/login`, {
+      const response = await fetch((process.env.NEXT_PUBLIC_API_URL || 'https://kaynab-ai-backend.onrender.com') + '/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ whatsapp_number: fullNumber, password }),
+        body: JSON.stringify({ identifier: identifier.trim(), password }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Gubitaanka wuu fashilmay. Fadlan isku day markale.');
+        throw new Error(data.message || 'Gelitaanka wuu fashilmay. Fadlan isku day markale.');
       }
 
       localStorage.setItem('userToken', data.token);
       localStorage.setItem('userData', JSON.stringify(data.user));
 
-      if (data.requires_verification) {
-        router.push('/'); // Route verify logic inline on home
-      } else if (!data.user?.terms_accepted_at) {
-        router.push('/'); // Terms logic inline on home
-      } else if (!data.user?.country || !data.user?.gender) {
-        router.push('/'); // Onboarding inline on home
-      } else {
-        router.push('/');
-      }
+      router.push('/');
     } catch (err: any) {
       setErrorMsg(err.message || 'Cilad ayaa dhacday');
     } finally {
       setLoading(false);
     }
   };
-
   return (
     <div className="min-h-screen w-full flex flex-col justify-center items-center p-4 sm:p-6 bg-[#0D1117] transition-colors duration-300">
       <div className="w-full max-w-[390px] flex flex-col gap-6">
@@ -124,16 +79,15 @@ export default function LoginScreen() {
           <div className="flex flex-col items-center mb-6">
             <div className="w-16 h-16 relative mb-4">
               <Image 
-                src="/darkpen-logo-blue.png" 
-                alt="Darkpen Logo" 
+                src="/kaynab-logo.png" 
+                alt="Kaynab AI Logo" 
                 fill
                 priority
                 sizes="64px"
                 className="object-contain"
                 onError={(e) => {
-                  // Fallback if image not loaded
                   const target = e.target as HTMLImageElement;
-                  target.src = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=100';
+                  target.style.display = 'none';
                 }}
               />
             </div>
@@ -142,31 +96,18 @@ export default function LoginScreen() {
 
           <form onSubmit={handleLogin} className="w-full flex flex-col gap-5">
             
-            {/* WhatsApp Number Field */}
+            {/* Identifier Field: Email / Username / WhatsApp */}
             <div className="flex flex-col gap-1.5 w-full">
-              <label className="text-xs font-semibold text-blue-500 ml-1">WhatsApp Number</label>
-              <div className={`flex items-center border-2 rounded-xl overflow-hidden bg-gray-50 dark:bg-[#0D1117] transition-all duration-200 ${phoneFocused ? 'border-blue-500 ring-2 ring-blue-500/20' : 'border-gray-200 dark:border-gray-800'}`}>
-                
-                {/* Country Code Picker trigger */}
-                <button
-                  type="button"
-                  onClick={() => setModalVisible(true)}
-                  className="flex items-center gap-1.5 px-3 py-3.5 bg-gray-100 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-800 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all"
-                >
-                  <span>{countryFlag} {countryCode}</span>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3 h-3 text-gray-500">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                  </svg>
-                </button>
-
+              <label className="text-xs font-semibold text-blue-500 ml-1">Email / Username / WhatsApp Number</label>
+              <div className={`flex items-center border-2 rounded-xl overflow-hidden bg-gray-50 dark:bg-[#0D1117] transition-all duration-200 ${identifierFocused ? 'border-blue-500 ring-2 ring-blue-500/20' : 'border-gray-200 dark:border-gray-800'}`}>
                 <input
-                  type="tel"
-                  placeholder="61XXXXXXX"
-                  value={whatsappNumber}
-                  onChange={(e) => setWhatsappNumber(e.target.value)}
-                  onFocus={() => setPhoneFocused(true)}
-                  onBlur={() => setPhoneFocused(false)}
-                  className="flex-1 px-4 py-3 bg-transparent text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none text-base"
+                  type="text"
+                  placeholder="Enter email, username or WhatsApp number"
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
+                  onFocus={() => setIdentifierFocused(true)}
+                  onBlur={() => setIdentifierFocused(false)}
+                  className="flex-1 px-4 py-3.5 bg-transparent text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none text-base"
                   required
                 />
               </div>
@@ -210,7 +151,7 @@ export default function LoginScreen() {
             {/* Forgot Password */}
             <button
               type="button"
-              onClick={() => alert("Fadlan la xiriir WhatsApp support team.darkpen@gmail.com")}
+              onClick={() => alert('For password reset, please contact support@kaynabai.com')}
               className="text-right text-xs font-semibold text-blue-500 hover:underline active:scale-95 transition-all self-end"
             >
               Forgot password?
@@ -255,52 +196,7 @@ export default function LoginScreen() {
         </div>
       </div>
 
-      {/* Country Code Modal Dialog */}
-      {modalVisible && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center bg-black/60 backdrop-blur-sm p-0 sm:p-4">
-          {/* Backdrop click close */}
-          <div className="absolute inset-0" onClick={() => setModalVisible(false)}></div>
-          
-          <div className="relative w-full sm:max-w-md bg-white dark:bg-[#161B22] rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden max-h-[60vh] flex flex-col animate-in slide-in-from-bottom duration-300">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800">
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white">Dooro Waddanka</h3>
-              <button 
-                onClick={() => setModalVisible(false)}
-                className="w-8 h-8 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-5 h-5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            
-            <div className="flex-1 overflow-y-auto px-4 py-2 divide-y divide-gray-100 dark:divide-gray-800">
-              {COUNTRIES.map((item) => (
-                <button
-                  key={item.code}
-                  type="button"
-                  onClick={() => {
-                    setCountryCode(item.code);
-                    setCountryFlag(item.flag);
-                    setModalVisible(false);
-                  }}
-                  className="w-full flex items-center justify-between py-4 px-3 text-left hover:bg-gray-50 dark:hover:bg-gray-800/50 rounded-xl transition-all"
-                >
-                  <span className="text-sm font-medium text-gray-900 dark:text-white flex items-center gap-3">
-                    <span className="text-xl leading-none">{item.flag}</span>
-                    <span>{item.name} ({item.code})</span>
-                  </span>
-                  {countryCode === item.code && (
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={3} stroke="currentColor" className="w-5 h-5 text-blue-500">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                    </svg>
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+
 
     </div>
   );
