@@ -108,7 +108,7 @@ export default function ExamsView({ onOpenPdf, onOpenSidebar }: ExamsViewProps) 
   const getMediaUrl = (path: string) => {
     if (!path) return '';
     if (path.startsWith('http')) return path;
-    return `https://darkpen-backend.onrender.com${path.startsWith('/') ? '' : '/'}${path}`;
+    return (process.env.NEXT_PUBLIC_API_URL || "https://kaynab-ai-backend.onrender.com") + `${path.startsWith('/') ? '' : '/'}${path}`;
   };
 
   return (

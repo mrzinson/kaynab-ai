@@ -22,7 +22,7 @@ export default function Terms({ onComplete }: TermsProps) {
       const token = localStorage.getItem('userToken');
       if (!token) throw new Error(language === 'so' ? "Fadlan dib u gal App-ka (Login)" : "Session expired. Please login again.");
 
-      const response = await fetch(`https://darkpen-backend.onrender.com/api/auth/terms`, {
+      const response = await fetch((process.env.NEXT_PUBLIC_API_URL || "https://kaynab-ai-backend.onrender.com") + "/api/auth/terms", {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -129,7 +129,7 @@ export default function Terms({ onComplete }: TermsProps) {
             
             <div className="flex-1 overflow-y-auto p-6 text-sm text-gray-300 space-y-4 leading-relaxed scrollbar-thin">
               <p className="font-bold text-blue-555">Qodobka 1aad: Isticmaalka Adeegga</p>
-              <p>Mareegta Darkpen waxaa loo dhisay in ay ka caawiso ardayda iyo barayaasha dhinacyada waxbarashada iyada oo la adeegsanayo caqli-gacmeedka (AI).</p>
+              <p>Kaynab AI waxaa loo dhisay in ay ka caawiso ardayda iyo barayaasha dhinacyada waxbarashada iyada oo la adeegsanayo caqli-gacmeedka (AI).</p>
               
               <p className="font-bold text-blue-555">Qodobka 2aad: Mas'uuliyadda Koontada</p>
               <p>Waxaa laguu oggol yahay hal koonto oo keliya. Waa in aad ilaaliso nabadgelyada password-kaaga.</p>

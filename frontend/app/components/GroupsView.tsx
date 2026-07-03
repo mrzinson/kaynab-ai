@@ -38,7 +38,7 @@ export default function GroupsView({ onClose }: GroupsViewProps) {
       const token = localStorage.getItem('userToken');
       
       // My Groups
-      const myRes = await fetch(`https://darkpen-backend.onrender.com/api/groups/my`, {
+      const myRes = await fetch((process.env.NEXT_PUBLIC_API_URL || "https://kaynab-ai-backend.onrender.com") + "/api/groups/my", {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (myRes.ok) {
@@ -47,7 +47,7 @@ export default function GroupsView({ onClose }: GroupsViewProps) {
       }
 
       // Other Groups
-      const otherRes = await fetch(`https://darkpen-backend.onrender.com/api/groups/public?search=${searchQuery}`, {
+      const otherRes = await fetch((process.env.NEXT_PUBLIC_API_URL || "https://kaynab-ai-backend.onrender.com") + "/api/groups/public?search=${searchQuery}", {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (otherRes.ok) {
@@ -88,7 +88,7 @@ export default function GroupsView({ onClose }: GroupsViewProps) {
   const fetchCredits = async () => {
     try {
       const token = localStorage.getItem('userToken');
-      const response = await fetch(`https://darkpen-backend.onrender.com/api/user/profile`, {
+      const response = await fetch((process.env.NEXT_PUBLIC_API_URL || "https://kaynab-ai-backend.onrender.com") + "/api/user/profile", {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await response.json();
@@ -109,7 +109,7 @@ export default function GroupsView({ onClose }: GroupsViewProps) {
     setChatLoading(true);
     try {
       const token = localStorage.getItem('userToken');
-      const res = await fetch(`https://darkpen-backend.onrender.com/api/groups/${groupId}/messages`, {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || "https://kaynab-ai-backend.onrender.com") + "/api/groups/${groupId}/messages", {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) {
@@ -127,7 +127,7 @@ export default function GroupsView({ onClose }: GroupsViewProps) {
   const handleJoin = async (groupId: number) => {
     try {
       const token = localStorage.getItem('userToken');
-      const res = await fetch(`https://darkpen-backend.onrender.com/api/groups/join`, {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || "https://kaynab-ai-backend.onrender.com") + "/api/groups/join", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -182,7 +182,7 @@ export default function GroupsView({ onClose }: GroupsViewProps) {
 
     try {
       const token = localStorage.getItem('userToken');
-      const res = await fetch(`https://darkpen-backend.onrender.com/api/groups/messages`, {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || "https://kaynab-ai-backend.onrender.com") + "/api/groups/messages", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -234,7 +234,7 @@ export default function GroupsView({ onClose }: GroupsViewProps) {
       const token = localStorage.getItem('userToken');
 
       try {
-        const res = await fetch(`https://darkpen-backend.onrender.com/api/groups/messages`, {
+        const res = await fetch((process.env.NEXT_PUBLIC_API_URL || "https://kaynab-ai-backend.onrender.com") + "/api/groups/messages", {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -277,7 +277,7 @@ export default function GroupsView({ onClose }: GroupsViewProps) {
   const getMediaUrl = (path: string) => {
     if (!path) return '';
     if (path.startsWith('http')) return path;
-    return `https://darkpen-backend.onrender.com${path.startsWith('/') ? '' : '/'}${path}`;
+    return (process.env.NEXT_PUBLIC_API_URL || "https://kaynab-ai-backend.onrender.com") + `${path.startsWith('/') ? '' : '/'}${path}`;
   };
 
   const formatTime = (timeStr: string) => {

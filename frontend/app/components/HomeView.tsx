@@ -135,7 +135,7 @@ export default function HomeView({ userData, onSelectTab, onOpenPdf }: HomeViewP
   const getMediaUrl = (path: string) => {
     if (!path) return '';
     if (path.startsWith('http')) return path;
-    return `https://darkpen-backend.onrender.com${path.startsWith('/') ? '' : '/'}${path}`;
+    return (process.env.NEXT_PUBLIC_API_URL || "https://kaynab-ai-backend.onrender.com") + `${path.startsWith('/') ? '' : '/'}${path}`;
   };
 
   return (
@@ -143,7 +143,7 @@ export default function HomeView({ userData, onSelectTab, onOpenPdf }: HomeViewP
       
       {/* Greetings Header */}
       <div className="flex flex-col gap-1 select-none">
-        <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white">Kuso dhawaaw Darkpen</h2>
+        <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white">Kuso dhawaaw Kaynab AI</h2>
         <p className="text-xs text-gray-500 dark:text-gray-400 font-medium max-w-md">
           waa madal ka caawinaysa ardayda qaybaha kala duwan ee waxbarshada
         </p>

@@ -23,7 +23,7 @@ export default function BillingView({ onClose }: BillingViewProps) {
   const fetchProfile = async () => {
     try {
       const token = localStorage.getItem('userToken');
-      const response = await fetch(`https://darkpen-backend.onrender.com/api/user/profile`, {
+      const response = await fetch((process.env.NEXT_PUBLIC_API_URL || "https://kaynab-ai-backend.onrender.com") + "/api/user/profile", {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await response.json();
@@ -39,7 +39,7 @@ export default function BillingView({ onClose }: BillingViewProps) {
 
   const fetchPaymentConfig = async () => {
     try {
-      const res = await fetch(`https://darkpen-backend.onrender.com/api/auth/payment-config`);
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || "https://kaynab-ai-backend.onrender.com") + "/api/auth/payment-config");
       if (res.ok) {
         const data = await res.json();
         if (data && Array.isArray(data.numbers)) {
@@ -62,7 +62,7 @@ export default function BillingView({ onClose }: BillingViewProps) {
       title: 'Pay As You Go',
       price: '$0.5',
       somaliland: userCountry === 'Somaliland' ? '5,000 SL Shilling' : '',
-      description: 'Get credits to try out Darkpen AI features.',
+      description: 'Get credits to try out Kaynab AI features.',
       color: '#3B82F6',
       icon: 'flash',
       expiry: 'Expires in 10 days',
@@ -150,7 +150,7 @@ export default function BillingView({ onClose }: BillingViewProps) {
       const token = localStorage.getItem('userToken');
       const cleanedNumber = senderNumber.replace(/[\s\-+]/g, '');
 
-      const res = await fetch(`https://darkpen-backend.onrender.com/api/auth/submit-payment`, {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || "https://kaynab-ai-backend.onrender.com") + "/api/auth/submit-payment", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -194,7 +194,7 @@ export default function BillingView({ onClose }: BillingViewProps) {
         </button>
         <div>
           <h2 className="text-2xl font-extrabold text-white">CHOOSE A PLAN</h2>
-          <p className="text-xs text-gray-500 font-medium">To continue using Darkpen AI, please select one of the plans below.</p>
+          <p className="text-xs text-gray-500 font-medium">To continue using Kaynab AI, please select one of the plans below.</p>
         </div>
       </div>
 

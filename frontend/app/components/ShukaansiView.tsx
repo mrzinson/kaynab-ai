@@ -99,7 +99,7 @@ export default function ShukaansiView({ onOpenSidebar, onBack }: ShukaansiViewPr
       const token = localStorage.getItem('userToken');
       if (!token) return;
       try {
-        const res = await fetch(`https://darkpen-backend.onrender.com/api/chat/shukaansi-history`, {
+        const res = await fetch((process.env.NEXT_PUBLIC_API_URL || "https://kaynab-ai-backend.onrender.com") + "/api/chat/shukaansi-history", {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.ok) {
@@ -160,7 +160,7 @@ export default function ShukaansiView({ onOpenSidebar, onBack }: ShukaansiViewPr
         if (isRetry) setThinkingStatus('Server-ka ayaa toosaya…');
         const xhr = new XMLHttpRequest();
         activeXhr.current = xhr;
-        xhr.open('POST', `https://darkpen-backend.onrender.com/api/chat/ask`);
+        xhr.open('POST', (process.env.NEXT_PUBLIC_API_URL || "https://kaynab-ai-backend.onrender.com") + "/api/chat/ask");
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.setRequestHeader('Authorization', `Bearer ${token}`);
 

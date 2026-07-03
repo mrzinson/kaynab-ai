@@ -13,7 +13,7 @@ export default function PdfReader({ pdfUrl, title, type, onClose }: PdfReaderPro
   // Normalize PDF URL (ensure absolute URL)
   let cleanPdfUrl = pdfUrl;
   if (pdfUrl && !pdfUrl.startsWith('http')) {
-    cleanPdfUrl = `https://darkpen-backend.onrender.com${pdfUrl.startsWith('/') ? '' : '/'}${pdfUrl}`;
+    cleanPdfUrl = (process.env.NEXT_PUBLIC_API_URL || "https://kaynab-ai-backend.onrender.com") + `${pdfUrl.startsWith('/') ? '' : '/'}${pdfUrl}`;
   }
 
   // To display past papers or textbook PDFs in a browser friendly way, we use an iframe.

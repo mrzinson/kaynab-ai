@@ -88,7 +88,7 @@ export default function SettingsView({ onClose }: SettingsViewProps) {
     setErrorMsg('');
     try {
       const token = localStorage.getItem('userToken');
-      const res = await fetch(`https://darkpen-backend.onrender.com/api/user/account`, {
+      const res = await fetch((process.env.NEXT_PUBLIC_API_URL || "https://kaynab-ai-backend.onrender.com") + "/api/user/account", {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -244,7 +244,7 @@ export default function SettingsView({ onClose }: SettingsViewProps) {
           <div className="bg-[#161B22] border border-gray-800 rounded-3xl p-6 w-full max-w-sm flex flex-col gap-4 shadow-2xl relative">
             <h4 className="text-lg font-black text-red-500 text-center">Tirtirida Akoonka</h4>
             <p className="text-xs text-gray-300 leading-relaxed text-center font-medium">
-              Ma hubtaa inaad rabto inaad tirtirto akoonkaaga Darkpen? Talaabadan dib looma soo celin karo, dhammaan credits-kaaga iyo taariikhdaadu way tirtirmi doonaan.
+              Ma hubtaa inaad rabto inaad tirtirto akoonkaaga Kaynab AI? Talaabadan dib looma soo celin karo, dhammaan credits-kaaga iyo taariikhdaadu way tirtirmi doonaan.
             </p>
 
             {errorMsg && <p className="text-xs text-red-500 font-semibold text-center mt-1">{errorMsg}</p>}

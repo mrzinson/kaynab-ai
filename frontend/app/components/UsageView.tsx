@@ -37,7 +37,7 @@ export default function UsageView({ onClose, onGoToBilling }: UsageViewProps) {
     setLoading(true);
     try {
       const token = localStorage.getItem('userToken');
-      const response = await fetch(`https://darkpen-backend.onrender.com/api/user/usage`, {
+      const response = await fetch((process.env.NEXT_PUBLIC_API_URL || "https://kaynab-ai-backend.onrender.com") + "/api/user/usage", {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await response.json();

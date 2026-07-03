@@ -88,7 +88,7 @@ export const translations = {
     loading: "Loading...",
     profile_settings: "Profile Settings",
     privacy_policy: "Privacy Policy",
-    about_darkpen: "About Darkpen",
+    about_kaynab: "About Kaynab AI",
     all_books: "ALL BOOKS",
     select_book: "Choose the book you want to read (Read Only).",
     no_pdf_alert: "This book does not have a PDF file.",
@@ -141,7 +141,7 @@ export const translations = {
     loading: "Waa la soo rarayaa...",
     profile_settings: "Habaynta Profile-ka",
     privacy_policy: "Khaasnimada",
-    about_darkpen: "Ku Saabsan Darkpen",
+    about_kaynab: "Ku Saabsan Kaynab AI",
     all_books: "DHAMMAAN BUUGAAGTA",
     select_book: "Dooro buugga aad doonayso inaad akhrido (Read Only).",
     no_pdf_alert: "Buuggan malaha fayl PDF ah.",
@@ -220,7 +220,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   if (!isReady) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0D1117] text-white">
-        <div className="text-lg font-semibold animate-pulse">Loading Darkpen...</div>
+        <div className="text-lg font-semibold animate-pulse">Loading Kaynab AI...</div>
       </div>
     );
   }

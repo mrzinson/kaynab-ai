@@ -25,7 +25,7 @@ export default function AboutView({ onClose }: AboutViewProps) {
         </button>
         <div>
           <h2 className="text-2xl font-extrabold text-white">
-            {language === 'so' ? 'Ku Saabsan Darkpen' : 'About Darkpen'}
+            {language === 'so' ? 'Ku Saabsan Kaynab AI' : 'About Kaynab AI'}
           </h2>
           <p className="text-xs text-gray-500 font-medium">
             {language === 'so' ? 'Baro hadafkayaga iyo adeegyada aan bixinno' : 'Learn about our mission and services'}
@@ -37,9 +37,9 @@ export default function AboutView({ onClose }: AboutViewProps) {
         {/* Hero Section */}
         <div className="flex flex-col items-center text-center p-6 bg-[#161B22] border border-gray-850 rounded-3xl shadow-lg relative overflow-hidden select-none">
           <div className="w-24 h-24 relative mb-4">
-            <Image src="/darkpen-logo-blue.png" alt="Darkpen" fill className="object-contain" />
+            <Image src="/kaynab-logo.png" alt="Kaynab AI" fill className="object-contain" />
           </div>
-          <h3 className="text-2xl font-black text-white">Darkpen</h3>
+          <h3 className="text-2xl font-black text-white">Kaynab AI</h3>
           <span className="text-xs text-gray-500 font-bold mt-1">Version 1.0.1</span>
         </div>
 
@@ -53,7 +53,7 @@ export default function AboutView({ onClose }: AboutViewProps) {
           </div>
           <p className="text-xs text-gray-300 leading-relaxed font-medium">
             {language === 'so'
-              ? 'Ujeedada ugu weyn ee Darkpen waa in la helo madal casri ah oo u taagan "Muraajaco" ama xusuusinta ardayda si ay waxbarashadooda u horumariyaan. Waxaan isku xirnaa waxbarasho tayeysan iyo madadaalo maskaxda dejisa.'
+              ? 'Ujeedada ugu weyn ee Kaynab AI waa in la helo madal casri ah oo u taagan "Muraajaco" ama xusuusinta ardayda si ay waxbarashadooda u horumariyaan. Waxaan isku xirnaa waxbarasho tayeysan iyo madadaalo maskaxda dejisa.'
               : 'The main goal of Darkpen is to provide a modern revision and support platform for students to improve their education. We connect quality education with mind-refreshing interaction.'}
           </p>
         </div>
@@ -65,13 +65,13 @@ export default function AboutView({ onClose }: AboutViewProps) {
               <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
             </svg>
             <h4 className="text-base font-extrabold text-white">
-              {language === 'so' ? 'Maxay tahay Darkpen?' : 'What is Darkpen?'}
+              {language === 'so' ? 'Maxay tahay Kaynab AI?' : 'What is Darkpen?'}
             </h4>
           </div>
           <p className="text-xs text-gray-300 leading-relaxed font-medium mb-4">
             {language === 'so'
-              ? 'Darkpen waa madal waxbarasho oo dhammaystiran oo loogu talagalay in lagu caawiyo ardayda heerar kasta. App-ku wuxuu bixiyaa adeegyo ay ka mid yihiin:'
-              : 'Darkpen is a comprehensive education platform built to assist students of all levels. The application provides services including:'}
+              ? 'Kaynab AI waa madal waxbarasho oo dhammaystiran oo loogu talagalay in lagu caawiyo ardayda heerar kasta. App-ku wuxuu bixiyaa adeegyo ay ka mid yihiin:'
+              : 'Kaynab AI is a comprehensive education platform built to assist students of all levels. The application provides services including:'}
           </p>
 
           <div className="flex flex-col gap-4">
