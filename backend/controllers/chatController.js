@@ -516,9 +516,18 @@ Answer in the same language as the user query or the text in the image.]\n\nUser
                     );
                     insertedUserMsgId = insertResult.insertId;
                 } else {
+                    // Validate sessionId exists in chat_sessions before using it
+                    let validSessionId = null;
+                    if (sessionId) {
+                        const [sessRows] = await db.execute(
+                            'SELECT id FROM chat_sessions WHERE id = ? AND user_id = ?',
+                            [sessionId, userId]
+                        );
+                        validSessionId = sessRows.length > 0 ? sessionId : null;
+                    }
                     await db.execute(
                         'INSERT INTO messages_private (user_id, session_id, sender, message) VALUES (?, ?, "user", ?)',
-                        [userId, sessionId || null, message || "[Attachment]"]
+                        [userId, validSessionId, message || "[Attachment]"]
                     );
                 }
             } catch (err) {
@@ -594,9 +603,18 @@ Answer in the same language as the user query or the text in the image.]\n\nUser
                                 );
                             }
                         } else {
+                            // Validate sessionId before saving AI reply
+                            let validSessionId = null;
+                            if (sessionId) {
+                                const [sessRows] = await db.execute(
+                                    'SELECT id FROM chat_sessions WHERE id = ? AND user_id = ?',
+                                    [sessionId, userId]
+                                );
+                                validSessionId = sessRows.length > 0 ? sessionId : null;
+                            }
                             await db.execute(
                                 'INSERT INTO messages_private (user_id, session_id, sender, message) VALUES (?, ?, "ai", ?)',
-                                [userId, sessionId || null, finalSavedText]
+                                [userId, validSessionId, finalSavedText]
                             );
                         }
                         
@@ -667,14 +685,23 @@ Answer in the same language as the user query or the text in the image.]\n\nUser
                     const aiLogger = require('../utils/aiLogger');
                     aiLogger.logAIUsage(userId, modelName, message || "[Attachment]", aiResponseText, 'shukaansi');
                 } else {
-                    // Save User and AI messages for private chat sequentially to prevent out-of-order IDs and identical timestamps
+                    // Validate sessionId exists in chat_sessions before using it
+                    let validSessionId = null;
+                    if (sessionId) {
+                        const [sessRows] = await db.execute(
+                            'SELECT id FROM chat_sessions WHERE id = ? AND user_id = ?',
+                            [sessionId, userId]
+                        );
+                        validSessionId = sessRows.length > 0 ? sessionId : null;
+                    }
+                    // Save User and AI messages for private chat
                     await db.execute(
                         'INSERT INTO messages_private (user_id, session_id, sender, message) VALUES (?, ?, "user", ?)',
-                        [userId, sessionId || null, message || "[Attachment]"]
+                        [userId, validSessionId, message || "[Attachment]"]
                     );
                     await db.execute(
                         'INSERT INTO messages_private (user_id, session_id, sender, message) VALUES (?, ?, "ai", ?)',
-                        [userId, sessionId || null, aiResponseText]
+                        [userId, validSessionId, aiResponseText]
                     );
 
                     // Log AI usage!
