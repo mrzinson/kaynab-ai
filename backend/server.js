@@ -10,6 +10,44 @@ const path = require('path');
 
 dotenv.config();
 
+// ============================================================
+// GEMINI API KEY DIAGNOSTIC — shown at startup in Render logs
+// ============================================================
+(async () => {
+    const key = process.env.GEMINI_API_KEY;
+    if (!key) {
+        console.error('[STARTUP] ❌ GEMINI_API_KEY is NOT SET in environment variables!');
+        return;
+    }
+    const masked = key.substring(0, 8) + '...' + key.slice(-4);
+    console.log(`[STARTUP] 🔑 GEMINI_API_KEY found: ${masked} (length: ${key.length})`);
+
+    // Quick live test against the API
+    try {
+        const testUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`;
+        const resp = await fetch(testUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: 'hi' }] }] })
+        });
+        if (resp.ok) {
+            console.log('[STARTUP] ✅ Gemini API key is VALID and WORKING!');
+        } else {
+            const errBody = await resp.text();
+            console.error(`[STARTUP] ❌ Gemini API test FAILED: ${resp.status} ${resp.statusText}`);
+            console.error('[STARTUP] Error details:', errBody.substring(0, 300));
+            if (resp.status === 403) {
+                console.error('[STARTUP] 💡 FIX: Enable "Generative Language API" at https://console.cloud.google.com/apis/api/generativelanguage.googleapis.com/overview');
+                console.error('[STARTUP] 💡 OR check key restrictions at https://console.cloud.google.com/apis/credentials');
+            }
+        }
+    } catch (e) {
+        console.error('[STARTUP] ❌ Network error testing Gemini API:', e.message);
+    }
+})();
+// ============================================================
+
+
 const app = express();
 const server = http.createServer(app);
 
