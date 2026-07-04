@@ -465,26 +465,26 @@ export default function ChatView({ onOpenLeftSidebar, onOpenNavPanel }: ChatView
   const graphNodes = getGraphNodes();
 
   return (
-    <div className="flex flex-col w-full h-full select-none overflow-hidden relative bg-[#05070B]" style={{ background: '#05070B' }}>
+    <div className="flex flex-col w-full h-full select-none overflow-hidden relative" style={{ background: '#090B10' }}>
 
       {/* ── HEADER ── */}
-      <div className="shrink-0 flex items-center justify-between px-6 py-4 bg-black/30 backdrop-blur-md" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-        <div className="flex items-center gap-3.5">
-          <button onClick={onOpenLeftSidebar} className="w-10 h-10 rounded-full flex items-center justify-center text-white/80 bg-white/5 border border-white/10 hover:bg-white/10 transition-all active:scale-95 lg:hidden">
+      <div className="shrink-0 flex items-center justify-between px-4 py-3 bg-[#0E1118]" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <div className="flex items-center gap-3">
+          <button onClick={onOpenLeftSidebar} className="w-10 h-10 rounded-full flex items-center justify-center text-white/80 bg-white/5 border transition-all active:scale-95 lg:hidden" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
             <IconHamburger />
           </button>
           
-          <div className="px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
-            <span className="text-blue-400 font-extrabold text-xs tracking-wider uppercase select-none">Workspace</span>
+          <div className="px-5 py-1.5 rounded-full bg-[#161B22] border flex items-center justify-center" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+            <span className="text-white font-bold text-sm tracking-wide select-none">AI Search Engine</span>
           </div>
 
           {/* Chat vs Graph View toggler */}
           {!isEmpty && (
-            <div className="flex rounded-full bg-white/5 border border-white/8 p-0.5">
-              <button onClick={() => setViewMode('chat')} className={`px-4 py-1 rounded-full text-xs font-bold transition-all duration-200 ${viewMode === 'chat' ? 'bg-blue-500 text-white shadow-md shadow-blue-500/20' : 'text-white/40 hover:text-white'}`}>
+            <div className="flex rounded-full bg-white/5 border px-1 py-1" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+              <button onClick={() => setViewMode('chat')} className={`px-4 py-1 rounded-full text-xs font-bold transition-all ${viewMode === 'chat' ? 'bg-blue-500 text-white' : 'text-white/50 hover:text-white'}`}>
                 Chat
               </button>
-              <button onClick={() => setViewMode('graph')} className={`px-4 py-1 rounded-full text-xs font-bold transition-all duration-200 ${viewMode === 'graph' ? 'bg-blue-500 text-white shadow-md shadow-blue-500/20' : 'text-white/40 hover:text-white'}`}>
+              <button onClick={() => setViewMode('graph')} className={`px-4 py-1 rounded-full text-xs font-bold transition-all ${viewMode === 'graph' ? 'bg-blue-500 text-white' : 'text-white/50 hover:text-white'}`}>
                 Graph Map
               </button>
             </div>
@@ -493,17 +493,17 @@ export default function ChatView({ onOpenLeftSidebar, onOpenNavPanel }: ChatView
 
         <div className="flex items-center gap-3">
           {credits !== null && (
-            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white/70 text-[10px] font-black border border-white/8 bg-white/2">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 inline-block animate-pulse" />
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white/70 text-[10px] font-black border" style={{ background: 'rgba(255,255,255,0.02)', borderColor: 'rgba(255,255,255,0.08)' }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500 inline-block" />
               {credits} API Credits
             </div>
           )}
 
-          <div className="flex items-center rounded-full bg-white/5 border border-white/8 p-0.5">
-            <button onClick={clearHistory} className="w-8 h-8 rounded-full flex items-center justify-center text-white/40 hover:text-rose-400 hover:bg-white/5 transition-all active:scale-90" title="Clear history">
+          <div className="flex items-center rounded-full bg-white/5 border px-1 py-1" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+            <button onClick={clearHistory} className="w-8 h-8 rounded-full flex items-center justify-center text-white/60 hover:text-rose-400 hover:bg-white/5 transition-all active:scale-90" title="Clear history">
               <IconTrash />
             </button>
-            <button onClick={onOpenNavPanel} className="w-8 h-8 rounded-full flex items-center justify-center text-white/40 hover:text-blue-400 hover:bg-white/5 transition-all active:scale-90 lg:hidden" title="Navigation">
+            <button onClick={onOpenNavPanel} className="w-8 h-8 rounded-full flex items-center justify-center text-white/60 hover:text-blue-400 hover:bg-white/5 transition-all active:scale-90 lg:hidden" title="Navigation">
               <IconNav />
             </button>
           </div>
@@ -515,30 +515,27 @@ export default function ChatView({ onOpenLeftSidebar, onOpenNavPanel }: ChatView
 
         {/* ── CHAT VIEW ── */}
         <div className={`flex-1 flex flex-col overflow-hidden ${viewMode === 'graph' ? 'hidden md:flex' : 'flex'}`}>
-          <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6 relative scrollbar-none">
+          <div className="flex-1 overflow-y-auto px-6 py-6 space-y-6 relative">
             {isEmpty && (
               <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center select-none overflow-y-auto pointer-events-none">
                 <div className="max-w-xl w-full flex flex-col items-center gap-6">
-                  <div className="w-14 h-14 rounded-3xl flex items-center justify-center bg-gradient-to-tr from-blue-500 to-indigo-500 shadow-xl shadow-blue-500/25 animate-float pointer-events-auto">
-                    <span className="text-white font-black text-lg">KB</span>
+                  <div className="w-14 h-14 rounded-3xl flex items-center justify-center bg-blue-500/10 border border-blue-500/20 shadow-2xl animate-pulse">
+                    <span className="text-blue-400 font-black text-lg">KB</span>
                   </div>
-                  <div>
-                    <h1 className="text-white text-3xl font-black tracking-tight leading-none bg-clip-text bg-gradient-to-r from-white via-white to-gray-400">Where knowledge begins.</h1>
-                    <p className="text-white/40 text-sm max-w-sm mt-3 mx-auto">Ask anything, upload research files, or search the live web with citation mapping.</p>
-                  </div>
+                  <h1 className="text-white text-3xl font-black tracking-tight leading-none">Where knowledge begins.</h1>
+                  <p className="text-white/40 text-sm max-w-sm">Ask anything, upload research files, or search the live web with citation mapping.</p>
                   
                   {/* Focus filters */}
                   <div className="flex gap-2 justify-center mt-2 pointer-events-auto">
                     {[
-                      { id: 'all', label: '🌐 All Web', desc: 'Search all public websites' },
-                      { id: 'academic', label: '🎓 Academic', desc: 'Filter peer reviewed papers' },
-                      { id: 'writing', label: '✍️ Writing', desc: 'Direct writing assistance' },
+                      { id: 'all', label: '🌐 All Web' },
+                      { id: 'academic', label: '🎓 Academic' },
+                      { id: 'writing', label: '✍️ Writing' },
                     ].map(focus => {
                       const active = focusMode === focus.id;
                       return (
                         <button key={focus.id} type="button" onClick={() => setFocusMode(focus.id as any)}
-                          className={`px-4 py-2.5 rounded-2xl text-xs font-bold transition-all border ${active ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' : 'bg-[#161B22]/45 border-white/5 text-white/50 hover:text-white hover:border-white/10'}`}
-                          title={focus.desc}>
+                          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${active ? 'bg-blue-500/10 border-blue-500/30 text-blue-400' : 'bg-white/3 border-white/5 text-white/50 hover:text-white'}`}>
                           {focus.label}
                         </button>
                       );
@@ -565,13 +562,13 @@ export default function ChatView({ onOpenLeftSidebar, onOpenNavPanel }: ChatView
                         </div>
                       )}
                       {msg.text && (
-                        <div className="px-4 py-3 rounded-2xl rounded-tr-sm text-white text-sm leading-relaxed shadow-lg font-semibold bg-white/[0.04] border border-white/10">
+                        <div className="px-4 py-3 rounded-2xl rounded-tr-sm text-white text-sm leading-relaxed shadow-lg font-medium bg-[#161B22] border border-white/8">
                           {msg.text}
                         </div>
                       )}
                     </div>
                   ) : (
-                    <div className="max-w-[88%] w-full flex flex-col items-start gap-3 bg-white/[0.01] border border-white/5 rounded-2xl p-4 shadow-xl">
+                    <div className="max-w-[88%] w-full flex flex-col items-start gap-3">
                       {/* Citations / Sources Block */}
                       {msg.sources && msg.sources.length > 0 && (
                         <div className="w-full">
@@ -603,7 +600,7 @@ export default function ChatView({ onOpenLeftSidebar, onOpenNavPanel }: ChatView
 
                       {/* AI Text output */}
                       {msg.text && msg.status !== 'thinking' && (
-                        <div className="text-sm leading-relaxed text-white/90 select-text font-medium w-full" dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.text) }} />
+                        <div className="text-sm leading-relaxed text-white/90 select-text font-medium" dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.text) }} />
                       )}
 
                       {msg.text && msg.status !== 'thinking' && (
@@ -622,7 +619,7 @@ export default function ChatView({ onOpenLeftSidebar, onOpenNavPanel }: ChatView
           </div>
 
           {/* ── INPUT BOX ── */}
-          <div className="shrink-0 px-6 pb-6 pt-3 relative bg-gradient-to-t from-black/50 to-transparent">
+          <div className="shrink-0 px-6 pb-6 pt-3 relative" style={{ background: 'rgba(9,11,16,0.5)', backdropFilter: 'blur(10px)' }}>
             {/* Attachment preview pills */}
             {attachments.length > 0 && (
               <div className="flex gap-2 mb-3 overflow-x-auto pb-1">
@@ -636,7 +633,7 @@ export default function ChatView({ onOpenLeftSidebar, onOpenNavPanel }: ChatView
               </div>
             )}
 
-            <form onSubmit={handleSend} className="rounded-2xl bg-[#0E1118]/80 backdrop-blur-xl border border-white/8 p-2 flex flex-col gap-2 shadow-2xl focus-within:border-blue-500/40 focus-within:ring-2 focus-within:ring-blue-500/10 transition-all duration-200">
+            <form onSubmit={handleSend} className="rounded-2xl bg-[#0E1118] border border-white/8 p-2 flex flex-col gap-2">
               <input type="file" ref={fileInputRef} onChange={handleDocumentSelect} className="hidden" />
               
               <div className="flex items-center gap-2.5 px-3">
@@ -669,7 +666,7 @@ export default function ChatView({ onOpenLeftSidebar, onOpenNavPanel }: ChatView
                     <IconMic />
                   </button>
                 ) : (
-                  <button type="submit" disabled={isAiTyping} className="w-8 h-8 rounded-full flex items-center justify-center text-white transition-all bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90 shadow shadow-blue-500/20 hover:scale-105 active:scale-95">
+                  <button type="submit" disabled={isAiTyping} className="w-8 h-8 rounded-full flex items-center justify-center text-white transition-all bg-blue-500 hover:scale-105 active:scale-95">
                     <IconSend />
                   </button>
                 )}
@@ -679,40 +676,32 @@ export default function ChatView({ onOpenLeftSidebar, onOpenNavPanel }: ChatView
         </div>
 
         {/* ── INTERACTIVE KNOWLEDGE GRAPH VIEW (NotebookLM Competitor) ── */}
-        <div className={`flex-1 md:w-[350px] lg:w-[450px] shrink-0 border-l border-white/8 flex flex-col bg-[#080A0E] ${viewMode === 'graph' ? 'flex' : 'hidden md:flex'}`}>
-          <div className="shrink-0 p-4 border-b border-white/8 flex justify-between items-center bg-black/20 backdrop-blur-md">
+        <div className={`flex-1 md:w-[350px] lg:w-[450px] shrink-0 border-l border-white/8 flex flex-col bg-[#0E1118] ${viewMode === 'graph' ? 'flex' : 'hidden md:flex'}`}>
+          <div className="shrink-0 p-4 border-b border-white/8 flex justify-between items-center bg-[#090B10]">
             <div>
-              <h3 className="text-white text-xs font-black uppercase tracking-wider">Concept Graph Map</h3>
+              <h3 className="text-white text-xs font-bold uppercase tracking-wider">Concept Graph Map</h3>
               <p className="text-[10px] text-white/40">Visualizing logical nodes and grounded sources</p>
             </div>
             <button onClick={() => setViewMode('chat')} className="text-white/40 hover:text-white text-xs md:hidden">Close</button>
           </div>
 
           {/* Interactive Graph Canvas */}
-          <div className="flex-1 relative overflow-hidden bg-[#05070B]">
-            {/* SVG Dot grid pattern */}
-            <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.04)_1px,transparent_1px)] [background-size:16px_16px] pointer-events-none" />
-
-            <svg className="w-full h-full relative z-10">
+          <div className="flex-1 relative overflow-hidden bg-black/10">
+            <svg className="w-full h-full">
               {/* Connection Lines */}
-              <line x1="200" y1="200" x2="80" y2="100" stroke="rgba(59,130,246,0.35)" strokeWidth="2.5" />
-              <line x1="200" y1="200" x2="320" y2="100" stroke="rgba(59,130,246,0.35)" strokeWidth="2.5" />
-              <line x1="200" y1="200" x2="100" y2="300" stroke="rgba(139,92,246,0.25)" strokeWidth="2" strokeDasharray="5" />
-              <line x1="200" y1="200" x2="300" y2="300" stroke="rgba(139,92,246,0.25)" strokeWidth="2" strokeDasharray="5" />
+              <line x1="200" y1="200" x2="80" y2="100" stroke="rgba(59,130,246,0.3)" strokeWidth="2" />
+              <line x1="200" y1="200" x2="320" y2="100" stroke="rgba(59,130,246,0.3)" strokeWidth="2" />
+              <line x1="200" y1="200" x2="100" y2="300" stroke="rgba(59,130,246,0.2)" strokeWidth="2" strokeDasharray="4" />
+              <line x1="200" y1="200" x2="300" y2="300" stroke="rgba(59,130,246,0.2)" strokeWidth="2" strokeDasharray="4" />
               
               {/* Interactive Nodes */}
               {graphNodes.map(node => {
                 const isSelected = selectedNode?.id === node.id;
                 return (
-                  <g key={node.id} className="cursor-pointer group" onClick={() => setSelectedNode(node)}>
-                    {node.type === 'center' && (
-                      <circle cx={node.x} cy={node.y} r="38" className="fill-blue-500/5 stroke-blue-500/10 animate-pulse-slow" />
-                    )}
+                  <g key={node.id} className="cursor-pointer" onClick={() => setSelectedNode(node)}>
                     <circle cx={node.x} cy={node.y} r={node.type === 'center' ? '28' : '22'}
-                      fill={node.type === 'center' ? 'rgba(0,132,255,0.2)' : isSelected ? 'rgba(139,92,246,0.25)' : 'rgba(22,27,34,0.75)'}
-                      stroke={node.type === 'center' ? '#0084FF' : isSelected ? '#8B5CF6' : 'rgba(255,255,255,0.12)'} 
-                      strokeWidth="2"
-                      className="transition-all duration-300 group-hover:scale-105 group-hover:stroke-blue-400" />
+                      fill={node.type === 'center' ? 'rgba(59,130,246,0.2)' : isSelected ? 'rgba(59,130,246,0.4)' : 'rgba(255,255,255,0.03)'}
+                      stroke={node.type === 'center' || isSelected ? '#3B82F6' : 'rgba(255,255,255,0.1)'} strokeWidth="2" />
                     <text x={node.x} y={node.y + 4} textAnchor="middle" fill="white" fontSize="9" fontWeight="bold" className="pointer-events-none select-none">
                       {node.id === '1' ? 'Focus' : node.id === '2' ? 'Web [1]' : node.id === '3' ? 'Ref [2]' : `Node ${node.id}`}
                     </text>
@@ -722,22 +711,22 @@ export default function ChatView({ onOpenLeftSidebar, onOpenNavPanel }: ChatView
             </svg>
 
             {/* Instruction layer overlay */}
-            <div className="absolute bottom-4 left-4 right-4 pointer-events-none bg-black/60 backdrop-blur-md border border-white/8 rounded-xl p-3 text-center z-20">
-              <span className="text-[10px] text-white/50 font-medium">Click on any node above to inspect its grounded references and synthesized concept logic.</span>
+            <div className="absolute bottom-4 left-4 right-4 pointer-events-none bg-black/40 border border-white/5 rounded-xl p-3 text-center">
+              <span className="text-[10px] text-white/50">Click on any node above to inspect its grounded references and synthesized concept logic.</span>
             </div>
           </div>
 
           {/* Node detail side panel drawer */}
           {selectedNode && (
-            <div className="h-[185px] shrink-0 border-t border-white/8 p-5 bg-[#090B10]/95 backdrop-blur-md flex flex-col gap-2 animate-in slide-in-from-bottom duration-300 relative z-30">
-              <div className="flex justify-between items-center">
-                <span className={`text-[9px] uppercase font-black px-2.5 py-0.5 rounded-full ${selectedNode.type === 'center' ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20' : 'bg-purple-500/10 text-purple-400 border border-purple-500/20'}`}>
+            <div className="h-[180px] shrink-0 border-t border-white/8 p-4 bg-[#090B10] flex flex-col gap-2 animate-in slide-in-from-bottom duration-300">
+              <div className="flex-between">
+                <span className={`text-[9px] uppercase font-bold px-2 py-0.5 rounded-full ${selectedNode.type === 'center' ? 'bg-blue-500/10 text-blue-400' : 'bg-white/5 text-white/50'}`}>
                   {selectedNode.type} node
                 </span>
-                <button onClick={() => setSelectedNode(null)} className="text-white/40 hover:text-white text-xs font-bold transition-all">✕ Close</button>
+                <button onClick={() => setSelectedNode(null)} className="text-white/40 hover:text-white text-xs">✕ Close</button>
               </div>
-              <h4 className="text-sm font-bold text-white mt-1.5">{selectedNode.label}</h4>
-              <p className="text-xs text-white/50 leading-relaxed overflow-y-auto scrollbar-none mt-0.5 font-medium">{selectedNode.desc}</p>
+              <h4 className="text-sm font-bold text-white mt-1">{selectedNode.label}</h4>
+              <p className="text-xs text-white/60 leading-relaxed overflow-y-auto">{selectedNode.desc}</p>
             </div>
           )}
         </div>

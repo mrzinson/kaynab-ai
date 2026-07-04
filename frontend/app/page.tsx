@@ -21,10 +21,10 @@ import SettingsView     from './components/SettingsView';
 import AboutView        from './components/AboutView';
 
 /* ─────────────────── constants ─────────────────── */
-const DP_BG    = '#05070B'; // Deep space black
-const DP_SIDE  = 'rgba(10, 12, 18, 0.6)'; // Glassmorphism dark side
-const DP_BORD  = 'rgba(255,255,255,0.07)'; 
-const DP_ACCENT = '#0084FF'; 
+const DP_BG    = '#090B10'; // Slate-black solid background
+const DP_SIDE  = '#0E1118'; // Dark sidebar background
+const DP_BORD  = 'rgba(255,255,255,0.06)'; // Soft border
+const DP_ACCENT = '#0084FF'; // Bright Blue accent (mockup 4)
 
 /* ─────────────────── icon helpers ─────────────────── */
 const Ico = ({ d, cls = 'w-4 h-4' }: { d: string; cls?: string }) => (
@@ -54,13 +54,12 @@ const PATHS = {
 /* ─────────────────── sidebar nav item ─────────────────── */
 function SideItem({ icon, label, active, badge, onClick }: { icon: string; label: string; active?: boolean; badge?: string; onClick: () => void }) {
   return (
-    <button onClick={onClick} className={`w-full flex items-center gap-3 px-3 py-3 rounded-xl text-xs font-bold transition-all text-left group relative ${active ? 'text-white' : 'text-white/40 hover:text-white/90 hover:bg-white/5'}`}
-      style={active ? { background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', color: 'white' } : {}}>
-      {active && <span className="absolute left-0 top-3 bottom-3 w-1 rounded-r bg-blue-500" />}
-      <Ico d={icon} cls={`w-4 h-4 shrink-0 transition-all ${active ? 'text-blue-500' : 'text-white/30 group-hover:text-white/70'}`} />
+    <button onClick={onClick} className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all text-left group ${active ? 'text-white' : 'text-white/40 hover:text-white/80 hover:bg-white/5'}`}
+      style={active ? { background: 'rgba(255,255,255,0.06)', border: `1px solid ${DP_BORD}`, color: 'white' } : {}}>
+      <Ico d={icon} cls={`w-4 h-4 shrink-0 transition-all ${active ? 'text-blue-400' : 'text-white/30 group-hover:text-white/60'}`} />
       <span className="flex-1">{label}</span>
-      {badge && <span className="px-1.5 py-0.5 rounded text-[8px] font-black text-white bg-blue-600">{badge}</span>}
-      {active && <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />}
+      {badge && <span className="px-1.5 py-0.5 rounded text-[8px] font-black text-white" style={{ background: DP_ACCENT }}>{badge}</span>}
+      {active && <span className="w-1.5 h-1.5 rounded-full bg-blue-400 shrink-0" />}
     </button>
   );
 }
@@ -118,35 +117,32 @@ export default function AppWorkspace() {
 
   /* ── left sidebar (full info + settings) ── */
   const LeftSidebar = () => (
-    <div className="flex flex-col h-full py-6 px-4 gap-5 overflow-y-auto scrollbar-none backdrop-blur-lg" style={{ background: 'rgba(10, 12, 18, 0.45)' }}>
+    <div className="flex flex-col h-full py-6 px-4 gap-5 overflow-y-auto scrollbar-none">
 
       {/* Logo + close on mobile */}
-      <div className="flex items-center justify-between shrink-0 mb-2">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-2xl flex items-center justify-center bg-gradient-to-tr from-blue-600 to-indigo-500 shadow-md shadow-blue-500/25">
-            <span className="text-white font-black text-xs tracking-wider">KB</span>
+      <div className="flex items-center justify-between shrink-0">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: DP_ACCENT }}>
+            <span className="text-white font-black text-[10px]">KB</span>
           </div>
-          <span className="text-white font-black text-sm tracking-wider bg-clip-text bg-gradient-to-r from-white to-gray-400">KAYNAB AI</span>
+          <span className="text-white font-black text-sm tracking-widest">KAYNAB AI</span>
         </div>
         <button onClick={() => setLeftOpen(false)} className="lg:hidden text-white/30 hover:text-white/80 p-1">
           <Ico d={PATHS.close} cls="w-4 h-4" />
         </button>
       </div>
 
-      {/* User card with Gradient Border Ring */}
-      <div className="shrink-0 rounded-2xl p-4 flex flex-col items-center text-center gap-3 relative overflow-hidden" 
-        style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.06)' }}>
-        <div className="w-14 h-14 rounded-full p-[2px] bg-gradient-to-tr from-blue-500 to-indigo-500">
-          <div className="w-full h-full rounded-full bg-[#161B22] flex items-center justify-center text-white text-lg font-black">
-            {userData?.name ? userData.name.substring(0, 2).toUpperCase() : 'KB'}
-          </div>
+      {/* User card */}
+      <div className="shrink-0 rounded-2xl p-4 flex flex-col items-center text-center gap-3" style={{ background: 'rgba(255,255,255,0.03)', border: `1px solid ${DP_BORD}` }}>
+        <div className="w-14 h-14 rounded-full flex items-center justify-center text-white text-xl font-black" style={{ background: DP_ACCENT }}>
+          {userData?.name ? userData.name.substring(0, 2).toUpperCase() : 'KB'}
         </div>
         <div>
-          <p className="text-white text-sm font-semibold">@{userData?.username || 'Kaynab AI User'}</p>
-          <p className="text-white/40 text-[10px] mt-0.5 font-medium">{userData?.whatsapp_number || ''}</p>
+          <p className="text-white text-sm font-bold">@{userData?.username || 'Kaynab AI User'}</p>
+          <p className="text-white/40 text-[10px] mt-0.5">{userData?.whatsapp_number || ''}</p>
         </div>
-        <button onClick={() => nav('billing')} 
-          className="flex items-center gap-2 px-5 py-2 rounded-full text-white text-[10px] font-black bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-md shadow-blue-500/20 active:scale-95 transition-all">
+        <button onClick={() => nav('billing')} className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-white text-[10px] font-black hover:opacity-90 transition-all animate-pulse"
+          style={{ background: DP_ACCENT }}>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
             <path d="M12 7.5a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z" />
             <path fillRule="evenodd" d="M1.5 4.875C1.5 3.839 2.34 3 3.375 3h17.25c1.035 0 1.875.84 1.875 1.875v9.75c0 1.036-.84 1.875-1.875 1.875H3.375A1.875 1.875 0 0 1 1.5 14.625v-9.75ZM8.25 9.75a3.75 3.75 0 1 1 7.5 0 3.75 3.75 0 0 1-7.5 0ZM18.75 9a.75.75 0 0 0-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 0 0 .75-.75V9.75a.75.75 0 0 0-.75-.75h-.008ZM4.5 9.75A.75.75 0 0 1 5.25 9h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H5.25a.75.75 0 0 1-.75-.75V9.75Z" clipRule="evenodd" />
@@ -158,14 +154,14 @@ export default function AppWorkspace() {
 
       {/* Navigation */}
       <div className="flex flex-col gap-1">
-        <p className="text-white/20 text-[9px] font-black uppercase tracking-widest px-2 mb-2">RESEARCH & ASSISTANCE</p>
+        <p className="text-white/25 text-[9px] font-black uppercase tracking-widest px-2 mb-1">RESEARCH & ASSISTANCE</p>
         <SideItem icon={PATHS.chat}    label="AI Search Assistant" active={currentView==='chat'}           onClick={() => nav('chat')} />
         <SideItem icon={PATHS.books}   label="My Library"         active={currentView==='notebooks'}      onClick={() => nav('notebooks')} />
         <SideItem icon={PATHS.groups}  label="Shared Spaces"      active={currentView==='spaces'}         onClick={() => nav('spaces')} />
       </div>
 
       <div className="flex flex-col gap-1">
-        <p className="text-white/20 text-[9px] font-black uppercase tracking-widest px-2 mb-2">ACCOUNT & SETTINGS</p>
+        <p className="text-white/25 text-[9px] font-black uppercase tracking-widest px-2 mb-1">ACCOUNT & SETTINGS</p>
         <SideItem icon={PATHS.person}  label="Profile"            active={currentView==='profile'}        onClick={() => nav('profile')} />
         <SideItem icon={PATHS.billing} label="Billing & Credits"  active={currentView==='billing'}        onClick={() => nav('billing')} />
         <SideItem icon={PATHS.settings}label="Settings"           active={currentView==='settings'}       onClick={() => nav('settings')} />
@@ -173,7 +169,7 @@ export default function AppWorkspace() {
       </div>
 
       {/* Toggles */}
-      <div className="flex flex-col gap-4 px-3 py-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)' }}>
+      <div className="flex flex-col gap-4 px-2 py-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.02)', border: `1px solid ${DP_BORD}` }}>
         <div className="flex items-center justify-between text-xs font-bold text-white/50">
           <div className="flex items-center gap-2"><Ico d={PATHS.moon} /><span>Dark Mode</span></div>
           <Toggle on={isDark} onChange={() => setTheme(isDark ? 'light' : 'dark')} />
@@ -194,7 +190,7 @@ export default function AppWorkspace() {
 
   /* ── nav panel (right drawer) ── */
   const NavPanel = () => (
-    <div className="flex flex-col h-full py-6 px-4 gap-4 overflow-y-auto scrollbar-none" style={{ background: 'rgba(10, 12, 18, 0.45)' }}>
+    <div className="flex flex-col h-full py-6 px-4 gap-4 overflow-y-auto scrollbar-none">
       <div className="flex items-center justify-between shrink-0 mb-2">
         <p className="text-white/80 text-sm font-bold">Navigation</p>
         <button onClick={() => setNavOpen(false)} className="text-white/30 hover:text-white/80 p-1">
@@ -279,20 +275,15 @@ export default function AppWorkspace() {
       ) : (!userData?.gender || !userData?.country) ? (
         <Onboarding onComplete={u => setUserData(u)} />
       ) : (
-        <div className="h-screen w-screen flex overflow-hidden relative bg-[#05070B]" style={{ background: DP_BG }}>
-          
-          {/* Atmospheric Glow Mesh & Grids */}
-          <div className="absolute inset-0 bg-grid-overlay pointer-events-none opacity-80" />
-          <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] mesh-glow-1 pointer-events-none" />
-          <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] mesh-glow-2 pointer-events-none" />
+        <div className="h-screen w-screen flex overflow-hidden" style={{ background: DP_BG }}>
 
           {/* ── DESKTOP: persistent left sidebar ── */}
-          <div className="hidden lg:flex w-[250px] h-full flex-col shrink-0 overflow-hidden relative z-10" style={sideStyle}>
+          <div className="hidden lg:flex w-[250px] h-full flex-col shrink-0 overflow-hidden" style={sideStyle}>
             <LeftSidebar />
           </div>
 
           {/* ── MAIN CONTENT ── */}
-          <div className="flex-1 h-full overflow-hidden flex flex-col relative z-10">
+          <div className="flex-1 h-full overflow-hidden flex flex-col">
             <Content />
           </div>
 
