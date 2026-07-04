@@ -140,17 +140,23 @@ function hasImageAttachment(attachment) {
 /**
  * La hadal Gemini
  */
-exports.askGemini = async (prompt, modelName = "gemini-3.1-flash-lite", attachment = null, history = [], systemInstruction = null) => {
+exports.askGemini = async (prompt, modelName = "gemini-2.0-flash", attachment = null, history = [], systemInstruction = null) => {
     let targetModel = modelName;
-    if (targetModel === "gemini-1.5-flash" || targetModel === "gemini-1.5-pro") {
-        targetModel = "gemini-3.1-flash-lite";
+    // Normalize old/invalid model names to valid ones
+    if (
+        targetModel === "gemini-1.5-flash" || 
+        targetModel === "gemini-1.5-pro" ||
+        targetModel === "gemini-3.1-flash-lite" ||
+        targetModel === "gemini-2.5-flash-lite"
+    ) {
+        targetModel = "gemini-2.0-flash";
     }
 
     const fallbackModels = Array.from(new Set([
         targetModel, 
-        "gemini-3.1-flash-lite",
-        "gemini-2.5-flash-lite",
-        "gemini-2.5-flash"
+        "gemini-2.0-flash",
+        "gemini-2.0-flash-lite",
+        "gemini-1.5-flash"
     ]));
 
     // Filter out models that are currently disabled by the circuit breaker due to high demand
@@ -226,17 +232,23 @@ exports.askGemini = async (prompt, modelName = "gemini-3.1-flash-lite", attachme
 /**
  * La hadal Gemini adigoo ku jawaabaya qaab Streaming ah
  */
-exports.askGeminiStream = async (prompt, modelName = "gemini-3.1-flash-lite", attachment = null, history = [], systemInstruction = null) => {
+exports.askGeminiStream = async (prompt, modelName = "gemini-2.0-flash", attachment = null, history = [], systemInstruction = null) => {
     let targetModel = modelName;
-    if (targetModel === "gemini-1.5-flash" || targetModel === "gemini-1.5-pro") {
-        targetModel = "gemini-3.1-flash-lite";
+    // Normalize old/invalid model names to valid ones
+    if (
+        targetModel === "gemini-1.5-flash" || 
+        targetModel === "gemini-1.5-pro" ||
+        targetModel === "gemini-3.1-flash-lite" ||
+        targetModel === "gemini-2.5-flash-lite"
+    ) {
+        targetModel = "gemini-2.0-flash";
     }
 
     const fallbackModels = Array.from(new Set([
         targetModel, 
-        "gemini-3.1-flash-lite",
-        "gemini-2.5-flash-lite",
-        "gemini-2.5-flash"
+        "gemini-2.0-flash",
+        "gemini-2.0-flash-lite",
+        "gemini-1.5-flash"
     ]));
 
     // Filter out models that are currently disabled by the circuit breaker due to high demand

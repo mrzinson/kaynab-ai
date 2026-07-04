@@ -112,7 +112,7 @@ exports.generateExamPdf = async (req, res) => {
             }
         }
 
-        const model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-lite" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
         const prompt = `Based on the following curriculum context (if provided), generate a high-quality academic exam paper for Somali secondary schools.
         

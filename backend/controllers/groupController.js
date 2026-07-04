@@ -110,7 +110,7 @@ Core Rules:
         const startGroupGemini = Date.now();
         const aiReply = await aiService.askGemini(
             promptText,
-            "gemini-2.5-flash",
+            "gemini-2.0-flash",
             attachment,
             history,
             groupSystemInstruction

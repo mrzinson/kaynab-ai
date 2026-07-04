@@ -501,7 +501,7 @@ Answer in the same language as the user query or the text in the image.]\n\nUser
         if (chatType === 'shukaansi' && aiName) {
             systemInstruction = `Magacaaga waa "${aiName}". Isticmaaluhu wuxuu kuu bixiyay magacan, fadlan u dhaqan sidii magacaaga rasmiga ah markaad la hadlayso.\n\n${shukaansiSystemInstruction}`;
         }
-        const modelName = "gemini-3.1-flash-lite";
+        const modelName = "gemini-2.0-flash";
 
         // Handle streaming response if requested
         if (stream === true) {
@@ -955,7 +955,7 @@ Rules for response formatting:
             };
         }
 
-        const modelName = "gemini-2.5-flash";
+        const modelName = "gemini-2.0-flash";
         const responseText = await aiService.askGemini(promptText, modelName, geminiAttachment, history || [], systemInstruction);
 
         // Log AI usage to database
